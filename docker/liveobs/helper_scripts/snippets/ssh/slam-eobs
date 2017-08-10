@@ -1,0 +1,74 @@
+#!/bin/bash
+# remote connect to eObs deployments 
+# Rob Dyke
+# rob@neovahealth.co.uk
+
+SITECODE=slam
+HOSTVAR=$2
+IDFILE=nh-nhsgw01_rsa
+NHPROXYSRV=nh-proxyout01.nhtek.net
+NHPROXYPORT=3128
+CONFFILE=slam-proxycommand.conf
+
+#ssh -F .ssh/$1.conf -i .ssh/$1.id_rsa
+
+
+# Will this work?
+#if [ -z "$2" ]
+#then    # yes error(s) found, let send an email
+#        echo "A server name would be really helpful"
+#	exit
+#else    # naa, everything looks 
+#        HOSTVAR=$2
+#fi
+
+# Detect two vars - an option and a server
+if [ "$#" -ne "2" ] ; then
+     echo -e "ERROR: Usage: $0 { cli|web|proxy|proxy+web } { maupvuat1001|maupvapp1001|maupvdb1001|maupvia1001 }"
+     exit 1
+fi
+
+# Purpose - Provide simple ssh session
+cli(){
+	echo "SSH to $HOSTVAR"
+        ssh -F $CONFFILE $HOSTVAR
+}
+
+# Purpose - Provide ssh session with reverse port forwarding to support environment http_proxy at remote back to Neova Health datacentre
+proxy(){
+        echo "SSH with Proxy:3128 to $HOSTVAR"
+        ssh -F $CONFFILE -R 3128:$NHPROXYSRV:$NHPROXYPORT $HOSTVAR
+}
+
+# Purpose - Provide ssh session with port forwarding to provide tunnel to open-eobs (desktop/mobile) at remote
+web(){
+        echo "SSH with Reverse:8080 to $HOSTVAR"
+        ssh -F $CONFFILE -L 8080:127.0.0.1:80 $HOSTVAR
+}
+
+# Purpose - Provide ssh session with reverse port forwarding to support environment http_proxy at remote back to Neova Health datacentre
+proxy_web(){
+        echo "SSH with Proxy:3128 and Reverse:8080 to $HOSTVAR"
+        ssh -F $CONFFILE -R 3128:$NHPROXYSRV:$NHPROXYPORT -L 8080:127.0.0.1:80 $HOSTVAR
+}
+
+case "$1" in
+        cli)
+                cli
+                ;;
+        proxy)
+                proxy
+                ;;
+        web)
+                web
+                ;;
+        proxy+web)
+                proxy_web
+                ;;
+        *)
+     		echo -e "ERROR: Usage: $0 { cli|web|proxy|proxy+web } { maupvuat1001|maupvapp1001|maupvdb1001|maupvia1001 }"
+		echo "Use this script to connect to SLAM open-eObs deployments"
+		echo "Set defaults in script header"
+esac
+
+

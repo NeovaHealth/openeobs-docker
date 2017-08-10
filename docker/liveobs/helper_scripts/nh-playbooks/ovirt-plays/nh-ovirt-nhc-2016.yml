@@ -1,0 +1,23 @@
+---
+# NH oVirt VM Provisioning play for NHC
+# Provisions NHC with open-eObs
+
+- hosts: nh-ovirt-nhc
+  user: root
+  gather_facts: True
+
+  vars_files:
+    - vars/nh-ovirt-vars-2016.yml
+
+  roles:
+      # - nh-default # NH Common defaults (repos, iptables, selinux)
+      # - python27 # Using Centos SCL https://www.softwarecollections.org
+      # - virtualenv # Installed to /opt/venv
+      # - postgresql # v9.3
+      # - nodejs # 
+      # - phantomjs # 
+      # - wkhtml # 
+      - nginx # configured for NH Clinical
+      # - nh-nhc-deploy # NH Clinical + openeObs
+      # - nh-demo-deploy
+      - nh-deployment

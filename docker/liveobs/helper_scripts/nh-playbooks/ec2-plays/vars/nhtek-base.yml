@@ -1,0 +1,9 @@
+---
+# NHTEK Base Default EC2 Vars
+
+nh_aws_keypair: nh-vmrunner
+nh_aws_amiid: ami-e678c395 # NHTEK Base 1457796667
+nh_aws_instance: t2.medium
+nh_aws_secgrp_id: sg-e6e10281
+nh_aws_region: eu-west-1
+nh_aws_tld: nhtek.io

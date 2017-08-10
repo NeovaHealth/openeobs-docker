@@ -1,0 +1,34 @@
+---
+# NH AWS EC2 Provisioning task
+# Work with specific hosts based on patterns
+
+- hosts: tag_nh_aws_p_nhc_ver_ci:&tag_nh_aws_p_odoo_tag_nh_8_0715
+  user: root
+
+  vars:
+    - odoo_addons_path: "{{ root_deploy_path }}/odoo-addons"
+    - odoo_tag: "{{ ec2_tag_nh_aws_p_odoo_tag }}"
+    # - odoo_tag: nh-8-0715
+    - odoo_start_filepath: "{{ odoo_base_path }}/odoo.py"
+    - odoo_version: 8
+    - db_name: nhclinical
+    - nh_clinical_user: odoo
+    - odoo_inv_createdb: "{{ ec2_tag_nh_aws_p_createdb }}"
+    - odoo_inv_install_uat: "{{ odoo_inv_createdb }}_uat"
+    - version: "{{ ec2_tag_nh_aws_p_nhc_ver }}"
+
+  roles:
+      # - nh-dev # Common dependencies for the environment
+      # - ntp
+      # - python27
+      # - virtualenv
+      # - postgresql
+      # - nginx
+      # - wkhtml
+      # - phantomjs
+      # - nh-odoo
+      # - nh-clinical
+      - java
+
+  # handlers:
+  #   - include: library/handlers/handlers.yml

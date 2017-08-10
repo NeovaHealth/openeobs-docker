@@ -1,0 +1,33 @@
+---
+# NH AWS EC2 Launcher task
+# # Based on http://docs.ansible.com/ansible/guide_aws.html
+#
+- hosts: localhost
+  connection: local
+  gather_facts: False
+
+  vars:
+    keypair: NH-Deploy-EU
+    ami_id: ami-e4b5ff93
+    nh_aws_l_createdb: demo.default
+    nh_aws_l_odoo_tag: nh-8-0715
+    nh_aws_l_nhc_ver: ci
+  tasks:
+    - name: Launch new Instance
+      ec2:
+          key_name: NH-Deploy-EU
+          group: NH-openeobs-sg-EU
+          instance_type: t2.medium
+          region: eu-west-1
+          image: "{{ami_id}}"
+          wait: true
+          # exact_count: 2
+          # count_tag:
+          #    class: Dev-Ready
+          instance_tags:
+             name: Demo-Ready
+             class: Demo-Ready
+             nh_aws_p_createdb: "{{ nh_aws_l_createdb }}"
+             nh_aws_p_odoo_tag: "{{ nh_aws_l_odoo_tag }}"
+             nh_aws_p_nhc_ver: "{{ nh_aws_l_nhc_ver }}"
+             nh_jbref: "{{ jbuild }}"

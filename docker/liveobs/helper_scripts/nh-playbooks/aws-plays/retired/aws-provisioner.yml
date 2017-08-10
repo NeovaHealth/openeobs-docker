@@ -1,0 +1,24 @@
+---
+# NH AWS EC2 Provisioning task
+
+- name: Config new EC2 node
+  hosts: launched # This uses the hosts that were added to the aws inventory file
+  user: root
+  gather_facts: True
+  tasks:
+    - name: Install epel-release # Install EPEL
+      yum: name=epel-release state=installed
+    - name: Update all packages
+      yum: name=* state=latest
+    - name: Install env deps
+      yum: name={{ item }} state=installed
+      with_items:
+         - wget
+         - openssh-clients
+         - vim
+         - nmap
+         - tmux
+         - zip
+         - unzip
+         - git
+         - libselinux-python

@@ -1,0 +1,62 @@
+---
+# NH AWS EC2 Launcher Play
+# Launches the nh-c6-clean AMI
+
+- hosts: localhost
+  connection: local
+  gather_facts: False
+
+  vars_files:
+    - vars/nh-ec2-defaults.yml
+
+  vars:
+    keypair: "{{ nh_keypair }}"
+    ami_id: "{{ nh_amiid }}"
+
+  tasks:
+    - name: Launch new Instance
+      ec2:
+          key_name: "{{ nh_keypair }}"
+          group: "{{ nh_securitygroup }}"
+          instance_type: "{{ nh_instancetype }}"
+          region: "{{ nh_region }}"
+          image: "{{ nh_amiid }}"
+          wait: true
+      register: ec2
+
+    - name: Add all instance public IPs to host group
+      add_host: hostname={{ item.public_ip }} groups=ec2deploy
+      with_items: ec2.instances
+
+    - name: Wait for SSH to come up
+      wait_for: host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=started
+      with_items: ec2.instances
+
+- hosts: ec2deploy
+  name: Prepare nh-c6-clean
+  #user: centos
+  become: True
+  become_method: sudo
+  become_user: root
+  gather_facts: False
+
+  vars_files:
+    - vars/nh-c6-clean.yml
+    - vars/nh-ec2-defaults.yml
+
+  vars:
+    keypair: "{{ nh_keypair }}"
+    ami_id: "{{ nh_amiid }}"
+
+  tasks:
+    - name: Set up authorized_keys for the deploy user
+      authorized_key: user=root key="{{ item }}"
+      with_file:
+        - "{{ nh_sshkey }}"
+    - name: Install epel-release # Install EPEL
+      yum: name=epel-release state=installed
+    - name: Update all packages # From Centos repo
+      yum: name=* state=latest
+    - name: Installing package deps
+      yum: name={{ item }} state=installed
+      with_items: "{{ nh_default_packages }}"

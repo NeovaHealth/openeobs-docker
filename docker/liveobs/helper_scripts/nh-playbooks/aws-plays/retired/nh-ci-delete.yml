@@ -1,0 +1,39 @@
+---
+# NH AWS EC2 Play
+# Delete an instance and remove DNS
+
+- hosts: ec2
+  gather_facts: False
+  connection: local
+  vars: 
+    - region: 'eu-west-1'
+  tasks:
+    - name: Gather EC2 facts
+      local_action: ec2_facts
+
+    - debug: var=hostvars[inventory_hostname]
+    - debug: msg="{{hostvars[inventory_hostname]['ec2_id']}}"
+
+#    - name: Terminate instances 
+#      local_action: ec2
+#        state='absent'
+#        instance_ids='{{ ec2_tag_Name }}'
+#        region='{{ region }}'
+#        wait=True
+
+    - name: Get route53 record
+      route53:
+          command: get
+          zone: openeobs.net
+          record: "{{ ec2_tag_nhp_fqdn }}"
+          type: A
+      register: rec
+
+    - name: Remove route53 record
+      route53:
+          command: delete
+          zone: openeobs.net
+          record: "{{ rec.set.record }}"
+          ttl: "{{ rec.set.ttl }}"
+          type: "{{ rec.set.type }}"
+          value: "{{ rec.set.value }}"

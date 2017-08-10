@@ -1,0 +1,11 @@
+---
+# Playbook for ansible role development and testing
+
+- hosts: all
+  user: root
+
+  vars:
+    - nginx_default: True
+
+  roles:
+    - nginx

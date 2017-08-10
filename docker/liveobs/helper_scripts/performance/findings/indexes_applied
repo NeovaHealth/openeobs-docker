@@ -1,0 +1,51 @@
+ROUND 1
+nh_activity.state
+nh_activity.data_model
+nh_activity.creator_id
+nh_activity.spell_activity_id
+nh_clinical_location.usage
+nh_clinical_location.parent_id
+nh_clinical_patient_observation.partial_reason
+
+ROUND 2
+nh_activity.user_id
+nh_activity.patient_id
+nh_activity.location_id
+nh_clinical_spell.activity_id # Couldn't find it!
+nh_clinical_patient_observation_ews.activity_id # Couldn't find it!
+nh_clinical_spell.patient_id
+nh_clinical_transfer.patient_id
+
+NOTABLE TABLES / COLUMNS I'M NOT APPLYING INDICES TO
+nh_activity.parent_id
+nh_activity.terminate_uid
+nh_activity.pos_id
+wardboard_swap_beds
+wardboard_patient_placement
+wardboard_device_sessionstart*
+*_rel
+share_wizard
+write_uid and create_uid in every table
+res_partner
+res_groups
+nh_clinical_transfer_wizard
+nh_clinical_staff_reallocation
+nh_clinical_patient.partner_id
+nh_clinical_doctor.partner_id
+nh_clinical_doctor.user_id
+nh_clinical_user_responsibility.responsible_user_id
+nh_clinical_responsibility_allocation.activity_id
+nh_clinical_responsibility_allocation.user_id
+nh_clinical_patient_transfer.activity_id
+nh_activity.ward_manager_id
+nh_clinical_spell.pos_id
+nh_clinical_patient_admission.pos_id
+nh_clinical_location.pos_id
+nh_activity.cancel_reason
+nh_clinical_placement.patient_id
+nh_clinical_patient_observation_ews.patient_id
+notifications referencing patient_id
+nh_clinical_adt*
+nh_clinical_spell.location_id
+nh_clinical_pos.location_id
+nh_clinical_patient_monitoring_exception.spell_id

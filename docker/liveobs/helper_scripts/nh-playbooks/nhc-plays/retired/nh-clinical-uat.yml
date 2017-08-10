@@ -1,0 +1,23 @@
+---
+# Playbook for ansible role development and testing
+
+- hosts: all
+  user: root
+
+  environment:
+     http_proxy: "http://nh-proxyout01.nhtek.net:3128"
+     https_proxy: "http://nh-proxyout01.nhtek.net:3128"
+
+  vars:
+    - odoo_addons_path: "{{ root_deploy_path }}/odoo-addons"
+    - odoo_tag: openeobs-8-12
+    - odoo_start_filepath: "{{ odoo_base_path }}/odoo.py"
+    - odoo_version: 8
+    - db_name: nhclinical
+    - nh_clinical_user: odoo
+
+  roles:
+    - nh-nhc-deploy
+
+  handlers:
+    - include: ../../nh-ansible/roles/nh-nhc-deploy/handlers/main.yml

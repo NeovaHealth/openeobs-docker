@@ -1,0 +1,12 @@
+---
+# Playbook used by http://vagrant.nhtek.io/nh-c6-vg-ready
+
+- hosts: all
+  user: root
+
+  vars_files:
+    - ../../nh-ansible/roles/nh-nhc-deploy/defaults/main.yml # Include vars from nh-odoo role
+
+  roles:
+      - nginx
+      - nh-nhc-deploy

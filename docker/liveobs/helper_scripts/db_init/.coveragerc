@@ -1,0 +1,16 @@
+[run]
+branch = True
+omit =
+        *__openerp__*
+
+[report]
+omit =
+        *__openerp__*
+        *__init__*
+        */tests/*
+        *nh_clinical/api_demo*
+        *nh_odoo_fixes/fixes_expression*
+show_missing = True
+
+[html]
+title = NHClinical Code Coverage Report

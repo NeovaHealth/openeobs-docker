@@ -1,0 +1,1 @@
+sudo ./import-to-ovirt.pl Development/nh-vmbuilder/output-qemu/nh-ovirtbase ov01.neova.lan:/store/nfs/export --vmtype Desktop --vcpus 1 --memory 2048

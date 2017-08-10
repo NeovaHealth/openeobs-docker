@@ -1,0 +1,11 @@
+# Added .gitignore
+.DS_STORE
+*.box
+.vagrant
+.bashrc
+.idea
+*.sublime-project
+*.sublime-workspace
+*.tar.gz
+#Ignore .out files
+*.out

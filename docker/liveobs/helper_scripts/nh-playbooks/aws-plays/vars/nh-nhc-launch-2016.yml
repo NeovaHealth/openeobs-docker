@@ -1,0 +1,10 @@
+---
+# NH EC2 Play
+# Vars for nh-nhc-(launch/install)-2016.yml
+
+nh_aws_keypair: nh-vmrunner
+nh_aws_amiid: ami-4ca22b3f #NHC Ready 30/04/16
+nh_aws_instance: t2.medium
+nh_aws_secgrp: NH-openeobs-sg-EU
+nh_aws_region: eu-west-1
+nh_aws_tld: nhtek.io

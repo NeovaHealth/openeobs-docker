@@ -1,0 +1,2 @@
+https://git.neovahealth.co.uk/r/nh_odoo/nh_clinical_core.git
+https://git.neovahealth.co.uk/r/nh_odoo/nh_core.git

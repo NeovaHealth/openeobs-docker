@@ -1,0 +1,19 @@
+# Neova Health Inventory for oVirt
+
+[nh-ovirt-nhc]
+nh-ov-b01-t01
+nh-ov-b01-t02
+nh-ov-b01-t03
+nh-ov-b01-t04
+
+[nh-ovirt-odoo]
+nh-ov-b01-t01
+nh-ov-b01-t02
+nh-ov-b01-t03
+nh-ov-b01-t04
+
+[nh-ovirt-core]
+nh-ov-b01-t01
+nh-ov-b01-t02
+nh-ov-b01-t03
+nh-ov-b01-t04

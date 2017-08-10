@@ -1,0 +1,11 @@
+---
+# NH AWS EC2 Play
+# Vars for nh-launch.yml
+
+nhp_keypair: nh-vmrunner
+nhp_amiid: ami-4ca22b3f #NHC Ready 30/04/16
+nhp_instancetype: t2.medium
+nhp_securitygroup: NH-openeobs-sg-EU
+nhp_region: eu-west-1
+nhp_prefix: default
+nhp_tld: nhtek.io

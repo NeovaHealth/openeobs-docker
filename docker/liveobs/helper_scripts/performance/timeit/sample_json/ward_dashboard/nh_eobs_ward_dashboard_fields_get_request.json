@@ -1,0 +1,25 @@
+{
+  "jsonrpc": "2.0",
+  "method": "call",
+  "params": {
+    "model": "nh.eobs.ward.dashboard",
+    "method": "fields_get",
+    "args": [],
+    "kwargs": {
+      "context": {
+        "lang": "en_GB",
+        "tz": "Europe/London",
+        "uid": 50,
+        "params": {
+          "view_type": "kanban",
+          "model": "nh.eobs.ward.dashboard",
+          "menu_id": 162,
+          "action": 178,
+          "_push_me": false
+        },
+        "active_model": "nh.eobs.ward.dashboard"
+      }
+    }
+  },
+  "id": 509418656
+}

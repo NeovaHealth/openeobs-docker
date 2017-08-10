@@ -1,0 +1,35 @@
+---
+# NH AWS EC2 Play
+# Delete an instance and remove DNS
+
+- hosts: ec2
+  gather_facts: False
+  connection: local
+
+  vars_files:
+    - vars/nh-launch-vars.yml
+
+  tasks:
+    - name: Terminate instances 
+      local_action: ec2
+        state='absent'
+        instance_ids='{{ nhc_ec2_id }}'
+        region='{{ nhp_region }}'
+        wait=True
+
+    - name: Get route53 record
+      route53:
+          command: get
+          zone: "{{nhp_tld}}"
+          record: "{{ nhj_hostname }}"
+          type: A
+      register: rec
+
+    - name: Remove route53 record
+      route53:
+          command: delete
+          zone: "{{nhp_tld}}"
+          record: "{{ rec.set.record }}"
+          ttl: "{{ rec.set.ttl }}"
+          type: "{{ rec.set.type }}"
+          value: "{{ rec.set.value }}"

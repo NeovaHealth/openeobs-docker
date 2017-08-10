@@ -1,0 +1,30 @@
+---
+# NH AWS EC2 Launcher task
+# Based on http://docs.ansible.com/ansible/guide_aws.html
+
+- hosts: localhost
+  connection: local
+  gather_facts: False
+
+  vars:
+    keypair: NH-Deploy-EU
+    ami_id: ami-d2511ba5
+
+  # vars_files:
+  #   - nhvault.yml
+
+  tasks:
+    - name: Launch new Instance
+      ec2:
+          key_name: NH-Deploy-EU
+          group: NH-openeobs-sg-EU
+          instance_type: t2.medium
+          region: eu-west-1
+          image: "{{ami_id}}"
+          wait: true
+          # exact_count: 1
+          # count_tag:
+          #    class: Dev-Ready
+          instance_tags:
+             name: Dev-Ready
+             class: Dev-Ready

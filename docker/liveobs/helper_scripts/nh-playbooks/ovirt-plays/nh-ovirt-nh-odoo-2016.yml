@@ -1,0 +1,18 @@
+---
+# NH oVirt VM Provisioning play for NHC
+# Provisions NH odoo 8
+
+- hosts: nh-ovirt-odoo
+  user: root
+  gather_facts: True
+
+  # vars_files:
+  #   - vars/nh-ovirt-vars-2016.yml
+  vars:
+    - nh_deploy_odoo: true
+
+  roles:
+     # - nginx # configured for NH Clinical
+     # - nh-nhc-deploy # NH Clinical + openeObs
+     # - nh-demo-deploy
+     - nh-deployment

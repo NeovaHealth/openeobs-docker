@@ -1,0 +1,56 @@
+---
+# Playbook for ansible role development and testing
+
+
+- hosts: all
+  user: root
+
+  # vars_files:
+  #   - vars/vagrant-nh-centos.yml
+
+  # tasks:
+  #   - name: Enable EPEL
+  #     yum: name=epel-release state=installed
+
+  #   - name: NH default packages
+  #     yum: name={{ item }} state=installed
+  #     with_items: "{{ nh_default_packages }}"
+
+  #   - name: PostgreSQL REPO
+  #     yum: name=http://yum.postgresql.org/9.3/redhat/rhel-6-x86_64/pgdg-centos93-9.3-1.noarch.rpm state=installed
+
+  #   - name: Install PostgreSQL
+  #     yum: name=postgresql93* state=installed
+
+  #   - name: add postgresql93 environment variable
+  #     copy: src=files/postgresql93.sh dest=/etc/profile.d/postgresql93.sh mode=0644
+
+  #   - name: Install SCL-utils
+  #     yum: name=scl-utils state=installed
+
+  #   - name: Python SCL REPO
+  #     yum: name=https://www.softwarecollections.org/en/scls/rhscl/python27/epel-6-x86_64/download/rhscl-python27-epel-6-x86_64.noarch.rpm state=installed
+
+  #   - name: Install Python2.7
+  #     yum: name={{ item }} state=installed
+  #     with_items: "{{ python27_packages }}"
+
+  #   - name: add python2.7 environment variable
+  #     copy: src=files/python27.sh dest=/etc/profile.d/python27.sh mode=0644
+
+  #   - name: Node.js REPO
+  #     yum: name=https://rpm.nodesource.com/pub_0.10/el/6/x86_64/nodesource-release-el6-1.noarch.rpm state=installed
+
+  #   - name: Install node.js
+  #     yum: name=nodejs state=installed
+
+  #   - name: NPM packages
+  #     npm: name={{ item }} global=yes
+  #     with_items: "{{ npm_packages }}"
+
+  roles:
+    - nh-default
+    - python27
+    - virtualenv
+    - postgresql
+    - nodejs

@@ -1,0 +1,20 @@
+---
+# NH AWS EC2 NHC Installer play
+# Uses instance launched in nh-launch.yml and installs NHC
+
+- hosts: "tag_nhj_id_{{ nhj_id }}"
+  user: root
+  gather_facts: False
+
+  vars:
+    - db_name: nhclinical
+    - nh_clinical_user: odoo
+    - nginx_server_name: "{{ ec2_tag_nhj_fqdn }}"
+
+  vars_files:
+    - vars/nh-launch-vars.yml
+
+  roles:
+      - nginx
+      - nh-demo-deploy
+

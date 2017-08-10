@@ -1,0 +1,31 @@
+---
+# NH AWS EC2 Play
+# Updates nhc installation
+
+- hosts: all 
+  user: root
+
+  vars_files:
+    - vars/nh-nhc-update-vars.yml
+
+  vars:
+    - odoo_addons_path: "{{ root_deploy_path }}/odoo-addons"
+    - odoo_tag: "{{ ec2_tag_nh_aws_p_odoo_tag }}"
+    - odoo_start_filepath: "{{ odoo_base_path }}/odoo.py"
+    - odoo_version: 8
+    - db_name: nhclinical
+    - nh_clinical_user: odoo
+    - odoo_inv_createdb: "{{ ec2_tag_nh_aws_p_createdb }}"
+    - odoo_inv_install_uat: "{{ odoo_inv_createdb }}_uat"
+    - version: "{{ ec2_tag_nh_aws_p_nhc_ver }}"
+    - nginx_server_name: "{{ ec2_tag_nh_aws_p_fqdn }}"
+    - nh_update_deployment: update
+
+  tasks:
+
+    # Include install_nhc_core task from odoo role
+    - include: ../../nh-ansible/roles/nh-odoo/tasks/install_nhc_core.yml
+
+    # Run invoke to update database
+    - name: Odoo Update Module # Update the odoo module
+      command: "{{ root_virtualenv }}/bin/inv demo.upgrade -d {{ db_name }} -m {{ update_module }} chdir={{ odoo_tools_dir }}"

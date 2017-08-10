@@ -1,0 +1,20 @@
+---
+# NH EC2 NHC Instal play
+# Uses instance from nh-nhc-launch-2016.yml
+# Installs NH Clinical
+
+- hosts: "tag_nh_id_{{ nh_aws_id }}"
+  user: root
+  gather_facts: True
+
+  vars:
+    - db_name: nhclinical
+    - nh_clinical_user: odoo
+    - nginx_server_name: "{{ nh_aws_fqdn }}"
+
+  vars_files:
+    - vars/nh-nhc-launch-2016.yml
+
+  roles:
+      - nginx
+      - nh-nhc-deploy

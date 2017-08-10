@@ -1,0 +1,60 @@
+---
+# NH AWS EC2 Launcher Play
+# Launches the NH-Dev-C6.6 AMI - Prepares as NHC
+
+- hosts: localhost
+  connection: local
+  gather_facts: False
+
+  vars:
+    keypair: NH-Deploy-EU
+    ami_id: ami-22c69755
+
+  tasks:
+    - name: Launch new Instance
+      ec2:
+          key_name: NH-Deploy-EU
+          group: NH-openeobs-sg-EU
+          instance_type: t2.medium
+          region: eu-west-1
+          image: "{{ami_id}}"
+          wait: true
+          # exact_count: 2
+          # count_tag:
+          #    class: Demo-Ready
+          instance_tags:
+             name: "NH-odoo-{{ jbuild }}"
+             class: "NH-odoo-{{ odoo_tag }}"
+             # nh_aws_p_createdb: "{{ odoo_inv_createdb }}"
+             # nh_aws_p_odoo_tag: "{{ odoo_tag }}"
+             # nh_aws_p_nhc_ver: "{{ version }}"
+             nh_jbref: "{{ jbuild }}"
+      register: ec2
+
+    - name: Add all instance public IPs to host group
+      add_host: hostname={{ item.public_ip }} groups=ec2deploy
+      with_items: ec2.instances
+
+    - name: Wait for SSH to come up
+      wait_for: host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=started
+      with_items: ec2.instances
+
+- hosts: ec2deploy
+  name: Prepare NH-NHC
+  user: root
+  gather_facts: True
+
+  vars:
+    - odoo_addons_path: "{{ root_deploy_path }}/odoo-addons"
+    # - odoo_tag: "{{ ec2_tag_nh_aws_p_odoo_tag }}"
+    - odoo_start_filepath: "{{ odoo_base_path }}/odoo.py"
+    - odoo_version: 8
+    - db_name: nhclinical
+    - nh_clinical_user: odoo
+    # - odoo_inv_createdb: "{{ ec2_tag_nh_aws_p_createdb }}"
+    - odoo_inv_install_uat: "{{ odoo_inv_createdb }}_uat"
+    # - version: "{{ ec2_tag_nh_aws_p_nhc_ver }}"
+
+  roles:
+      - nginx
+      - nh-odoo

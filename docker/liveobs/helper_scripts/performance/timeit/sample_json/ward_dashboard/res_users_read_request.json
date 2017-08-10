@@ -1,0 +1,17 @@
+{
+  "jsonrpc": "2.0",
+  "method": "call",
+  "params": {
+    "model": "res.users",
+    "method": "read",
+    "args": [
+      50,
+      [
+        "name",
+        "company_id"
+      ]
+    ],
+    "kwargs": {}
+  },
+  "id": 505586317
+}

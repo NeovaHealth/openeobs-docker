@@ -1,0 +1,51 @@
+---
+# NH AWS EC2 Launcher Play
+# Launches the NH-Core-C6.6 AMI - Prepares as NH-Dev
+
+- hosts: localhost
+  connection: local
+  gather_facts: False
+
+  vars:
+    keypair: NH-Deploy-EU
+    ami_id: ami-3ec79649
+
+  tasks:
+    - name: Launch new Instance
+      ec2:
+          key_name: NH-Deploy-EU
+          group: NH-openeobs-sg-EU
+          instance_type: t2.medium
+          region: eu-west-1
+          image: "{{ami_id}}"
+          wait: true
+          instance_tags:
+             name: "NH-Core-{{ jbuild }}"
+             class: NH-Core
+             nh_jbref: "{{ jbuild }}"
+      register: ec2
+
+    - name: Add all instance public IPs to host group
+      add_host: hostname={{ item.public_ip }} groups=ec2deploy
+      with_items: ec2.instances
+
+    - name: Wait for SSH to come up
+      wait_for: host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=started
+      with_items: ec2.instances
+
+# NH AWS EC2 Provisioning task
+# Setup instance as 'Dev ready'
+
+- hosts: ec2deploy
+  name: Prepare NH-DevReady
+  user: root
+  gather_facts: True
+
+  roles:
+      - nh-dev # Common dependencies for the environment
+      - ntp
+      - python27
+      - virtualenv
+      - postgresql
+      - wkhtml
+      - phantomjs

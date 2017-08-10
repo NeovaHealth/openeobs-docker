@@ -1,0 +1,63 @@
+#!/bin/bash
+# remote connect to eObs deployments 
+# Rob Dyke
+# rob@neovahealth.co.uk
+
+SITECODE=enht
+#HOSTVAR=$2
+IDFILE=nh-nhsgw01_rsa
+NHPROXYSRV=nh-proxyout01.nhtek.net
+NHPROXYPORT=3128
+CONFFILE=enht-proxycommand.conf
+
+#ssh -F .ssh/$1.conf -i .ssh/$1.id_rsa
+
+
+# Will this work?
+if [ -z "$2" ]
+then    # yes error(s) found, let send an email
+        echo "A server name would be really helpful"
+	exit
+else    # naa, everything looks 
+        HOSTVAR=$2
+fi
+
+
+# Purpose - Provide simple ssh session
+cli(){
+	ssh -F $CONFFILE $HOSTVAR
+}
+
+# Purpose - Provide ssh session with reverse port forwarding to support environment http_proxy at remote back to Neova Health datacentre
+proxy(){
+        ssh -F $CONFFILE -R 3128:$NHPROXYSRV:$NHPROXYPORT $HOSTVAR
+}
+
+# Purpose - Provide ssh session with port forwarding to provide tunnel to open-eobs (desktop/mobile) at remote
+web(){
+        ssh -F $CONFFILE -L 8080:127.0.0.1:80 $HOSTVAR
+}
+
+# Purpose - Provide ssh session with reverse port forwarding to support environment http_proxy at remote back to Neova Health datacentre
+proxy_web(){
+        ssh -F $CONFFILE -R 3128:$NHPROXYSRV:$NHPROXYPORT -L 8080:127.0.0.1:80 $HOSTVAR
+}
+
+case "$1" in
+        cli)
+                cli
+                ;;
+        proxy)
+                proxy
+                ;;
+        web)
+                web
+                ;;
+        proxy+web)
+                proxy_web
+                ;;
+        *)
+                echo "Usage: $0 {cli|web|proxy|proxy+web} servername"
+		echo "Use this script to connect to ENHT open-eObs deployments"
+		echo "Set defaults in script header"
+esac

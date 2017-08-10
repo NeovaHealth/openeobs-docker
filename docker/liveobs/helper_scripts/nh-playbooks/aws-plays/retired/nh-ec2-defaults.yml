@@ -1,0 +1,11 @@
+---
+# NH AWS EC2 Play
+# Vars for nh-launch.yml
+
+nh_keypair: NH-EU-C6 # Default Keypair
+nh_amiid: ami-68a8731b # NH_EC2_C6_Clean Creation date November 13, 2015 at 2:10:36 AM UTC
+nh_instancetype: t2.large # 2vCPU & 8GB
+nh_securitygroup: NH-Default-SG # SSH from SW18 & DC
+nh_region: eu-west-1 # Default region
+nh_tld: nhtek.io # Default TLD for EC2
+nh_sshkey: "{{ nh_toolchain }}/aws-plays/files/keys/nh-playbooks-id.rsa.pub" # Default EC2 pubkey

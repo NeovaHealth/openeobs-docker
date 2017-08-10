@@ -1,0 +1,6 @@
+SELECT "nh_clinical_wardboard".id FROM "nh_clinical_wardboard" ORDER BY "nh_clinical_wardboard"."location" asc;
+
+179ms
+178ms
+178.341ms
+174.260ms

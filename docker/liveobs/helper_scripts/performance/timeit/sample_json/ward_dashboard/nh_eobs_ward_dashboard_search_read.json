@@ -1,0 +1,55 @@
+{
+  "jsonrpc": "2.0",
+  "method": "call",
+  "params": {
+    "model": "nh.eobs.ward.dashboard",
+    "fields": [
+      "related_nurses",
+      "no_risk_patients",
+      "low_risk_patients",
+      "kanban_color",
+      "noscore_patients",
+      "assigned_wm_ids",
+      "location_id",
+      "related_hcas",
+      "capacity_count",
+      "workload_count",
+      "med_risk_patients",
+      "extended_leave_count",
+      "awol_count",
+      "assigned_doctor_ids",
+      "high_risk_patients",
+      "patients_in_bed",
+      "name",
+      "waiting_patients",
+      "acute_hospital_ed_count",
+      "related_doctors",
+      "on_ward_count",
+      "refused_obs_count",
+      "__last_update"
+    ],
+    "domain": [
+      [
+        "user_ids",
+        "in",
+        50
+      ]
+    ],
+    "context": {
+      "lang": "en_GB",
+      "tz": "Europe/London",
+      "uid": 50,
+      "params": {
+        "view_type": "kanban",
+        "model": "nh.eobs.ward.dashboard",
+        "menu_id": 162,
+        "action": 178,
+        "_push_me": false
+      }
+    },
+    "offset": 0,
+    "limit": 40,
+    "sort": ""
+  },
+  "id": 847110944
+}

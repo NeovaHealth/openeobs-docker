@@ -1,0 +1,15 @@
+---
+# Playbook used by http://vagrant.nhtek.io/nh-c6-vg-core
+# Set ansible.extra_vars
+# nh_box_base true/false
+# nh_box_develop true/false
+
+- hosts: all
+  user: root
+
+  roles:
+    - { role: nh-default, when: nh_box_base }
+    - { role: python27, when: nh_box_develop }
+    - { role: virtualenv, when: nh_box_develop }
+    - { role: postgresql, when: nh_box_develop }
+    - { role: nodejs, when: nh_box_develop }

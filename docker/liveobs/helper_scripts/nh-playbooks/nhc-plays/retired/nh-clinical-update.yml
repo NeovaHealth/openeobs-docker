@@ -1,0 +1,25 @@
+---
+# Playbook for ansible role development and testing
+
+- hosts: all
+  user: root
+
+  environment:
+    http_proxy: "http://nh-proxyout01.nhtek.net:3128"
+    https_proxy: "http://nh-proxyout01.nhtek.net:3128"
+
+  vars_files:
+    - ../../nh-ansible/roles/nh-nhc-deploy/defaults/main.yml
+
+  tasks:
+    - include: ../../nh-ansible/roles/nh-nhc-deploy/tasks/install_nhc_core.yml
+    - include: ../../nh-ansible/roles/nh-nhc-deploy/tasks/build_db_with_inv_UAT.yml
+    - include: ../../nh-ansible/roles/nh-nhc-deploy/tasks/update_deployment.yml
+
+  handlers:
+    - include: ../../nh-ansible/roles/nh-nhc-deploy/handlers/main.yml
+
+  vars:
+    odoo_user: odoo # odoo username
+    odoo_group: odoo # odoo group username
+    update_module: nh_activity

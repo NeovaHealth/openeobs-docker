@@ -1,0 +1,24 @@
+http://www.ovirt.org/REST-Api_listing_and_modifying_VM_vNic_profile
+
+
+# Get the NICs for the VM
+GET
+https://172.16.64.61/ovirt-engine/api/vms/{{ vmID }}/nics
+
+# Update a NIC for a VM
+PUT
+https://172.16.64.61/ovirt-engine/api/vms/{{ vmID }}/nics/{{ nicID }}
+
+
+# MHD86
+<nic>
+    <network href="/ovirt-engine/api/networks/0f1e86c3-6bd7-41fa-9330-26279bd703e0" id="0f1e86c3-6bd7-41fa-9330-26279bd703e0"/>
+    <vnic_profile href="/ovirt-engine/api/vnicprofiles/c94dea2c-6e40-4775-a06c-aabc8e1c6464" id="c94dea2c-6e40-4775-a06c-aabc8e1c6464"/>
+</nic>
+
+
+# MHD88
+<nic>
+    <network href="/ovirt-engine/api/networks/4eaf287a-f063-490b-8b4e-68670497cce2" id="4eaf287a-f063-490b-8b4e-68670497cce2"/>
+    <vnic_profile href="/ovirt-engine/api/vnicprofiles/74cbdd14-4b8a-4404-b022-8de9d2c6580e" id="74cbdd14-4b8a-4404-b022-8de9d2c6580e"/>
+</nic>

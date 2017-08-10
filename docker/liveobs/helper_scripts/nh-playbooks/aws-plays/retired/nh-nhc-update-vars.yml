@@ -1,0 +1,18 @@
+---
+# NH AWS EC2 Play
+# Vars for nh-nhc-update.yml
+odoo_user: odoo
+odoo_group: "{{ odoo_user }}"
+artifact_base_url: http://source.neovahealth.co.uk/sourcefile
+build_base_url: "{{ artifact_base_url }}/nhc"
+deploy_dir: /opt/nh # Deployment directory
+extract_dirs:
+  - "{{ deploy_dir }}/odoo-addons" # extract data from odoo-addons file in deployment directory
+  - "{{ deploy_dir }}/nhc_invoke" # extract data from the nhc_invoke file in deployment directory
+build_fetch:
+  - nh_clinical_odoo
+  - nh_clinical_odoo_tools
+root_virtualenv: /opt/venv # Directory of the virtual envionment
+update_module: nh_activity
+odoo_tools_dir: /opt/nh/nhc_invoke # Directory of the nhc_invoke file
+version: develop

@@ -1,0 +1,13 @@
+ldh_patient_flow_adt_configs
+nh_clinical_core
+nh_configurations
+nh_core
+nh_eobs
+nh_eobs_mobile
+nh_graphs
+nh_living_doc
+nh_observations
+nh_odoo_utils
+nh_patient_flow
+nh_report_printing
+nh_scenario

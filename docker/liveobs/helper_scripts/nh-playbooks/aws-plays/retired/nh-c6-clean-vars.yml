@@ -1,0 +1,35 @@
+---
+# NH AWS EC2 Play
+
+# Default packages for NH
+nh_default_packages:
+    - libselinux-python
+    - gcc
+    - make
+    - gcc-c++
+    - wget 
+    - zlib-devel 
+    - bzip2-devel 
+    - openssl-devel
+    - ncurses-devel 
+    - sqlite-devel 
+    - readline-devel 
+    - tk-devel
+    - libxml2-devel
+    - libxslt-devel
+    - openldap-devel
+    - libjpeg-devel
+    - libzip-devel
+    - inotify-tools
+    - python-inotify
+    - libffi-devel
+    - pyOpenSSL
+    - zip
+    - unzip
+    - nmap
+    - htop
+    - vim
+    - tmux
+    - scl-utils
+    - openssh-clients
+    - git

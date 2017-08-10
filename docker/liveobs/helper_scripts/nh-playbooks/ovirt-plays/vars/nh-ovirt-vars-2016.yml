@@ -1,0 +1,29 @@
+---
+# NH oVirt plays
+# Vars for nh-ovirt-*
+
+ov_user: admin@internal
+ov_pass: lrrfhkbkgthrbidjlhdrhtckcckbtetj
+ov_url: "https://172.16.64.61/ovirt-engine"
+ov_cluster: CyberServ
+ov_vm_name: default_vm_name
+
+odoo_inv_createdb: demo.demo
+nh_deploy_odoo: false
+nh_deploy_nhc: true
+nhc_uat: true
+nhc_uat_data: false
+nhc_demo_conf: true
+nhc_demo_gen: true
+nginx_nhclinical: true
+db_name: nhclinical
+nh_clinical_user: odoo
+nhc_conf_trname: NeovaHealth
+nhc_conf_trstatus: Foundation
+nhc_conf_tremail: office@neovahealth.co.uk
+nhc_conf_trwebsite: http://www.neovahealth.co.uk
+admin_pw: trustno1
+trname: NeovaHealth
+trstatus: Foundation
+tremail: office@neovahealth.co.uk
+trwebsite: http://www.neovahealth.co.uk

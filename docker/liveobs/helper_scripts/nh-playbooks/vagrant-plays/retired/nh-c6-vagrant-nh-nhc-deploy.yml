@@ -1,0 +1,14 @@
+---
+# Playbook for ansible role development and testing
+
+- hosts: all
+  user: root
+
+  vars_files:
+    - ../../nh-ansible/roles/nh-nhc-deploy/defaults/main.yml # Include vars from nh-odoo role
+
+  roles:
+      - nginx
+      - virtualenv
+      - postgresql
+      - nh-nhc-deploy

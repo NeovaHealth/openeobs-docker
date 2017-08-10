@@ -1,0 +1,44 @@
+INFO:erppeek_timer:Executing "nh.eobs.api"."register" 3 times...
+INFO:erppeek_timer:0.111478726069s average
+INFO:erppeek_timer:0.0704081058502s min
+
+INFO:erppeek_timer:Executing "nh.eobs.api"."complete" 3 times...
+INFO:erppeek_timer:0.318419615428s average
+INFO:erppeek_timer:0.261854887009s min
+
+INFO:erppeek_timer:Executing "nh.clinical.wardboard"."fields_view_get" 3 times...
+INFO:erppeek_timer:0.0249316692352s average
+INFO:erppeek_timer:0.0147190093994s min
+
+INFO:erppeek_timer:Executing "nh.clinical.wardboard"."fields_get" 3 times...
+INFO:erppeek_timer:0.0266280174255s average
+INFO:erppeek_timer:0.0235950946808s min
+
+INFO:erppeek_timer:Executing "nh.clinical.wardboard"."read_group" 3 times...
+INFO:erppeek_timer:0.0651696523031s average
+INFO:erppeek_timer:0.0609118938446s min
+
+INFO:erppeek_timer:Executing "nh.clinical.wardboard"."search_read" 3 times...
+INFO:erppeek_timer:0.230909347534s average
+INFO:erppeek_timer:0.225744962692s min
+
+INFO:erppeek_timer:Executing "res.users"."has_group" 3 times...
+INFO:erppeek_timer:0.00422064463298s average
+INFO:erppeek_timer:0.00258994102478s min
+
+INFO:erppeek_timer:Executing "res.users"."read" 3 times...
+INFO:erppeek_timer:0.00740639368693s average
+INFO:erppeek_timer:0.00614809989929s min
+
+INFO:erppeek_timer:Executing "nh.eobs.ward.dashboard"."fields_view_get" 3 times...
+INFO:erppeek_timer:0.0296316941579s average
+INFO:erppeek_timer:0.021852016449s min
+
+INFO:erppeek_timer:Executing "nh.eobs.ward.dashboard"."fields_get" 3 times...
+INFO:erppeek_timer:0.0204763412476s average
+INFO:erppeek_timer:0.0184679031372s min
+
+INFO:erppeek_timer:Executing "nh.eobs.ward.dashboard"."search_read" 3 times...
+INFO:erppeek_timer:0.400518019994s average
+INFO:erppeek_timer:0.391643047333s min
+

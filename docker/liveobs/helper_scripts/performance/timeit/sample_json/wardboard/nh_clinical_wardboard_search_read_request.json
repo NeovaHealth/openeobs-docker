@@ -1,0 +1,58 @@
+{
+  "jsonrpc": "2.0",
+  "method": "call",
+  "params": {
+    "model": "nh.clinical.wardboard",
+    "fields": [
+      "location_full_name",
+      "full_name",
+      "ews_trend_string",
+      "next_diff",
+      "location",
+      "nhs_number",
+      "hospital_number",
+      "ews_score_string",
+      "dob",
+      "age",
+      "sex",
+      "patient_id",
+      "frequency",
+      "date_scheduled",
+      "acuity_index",
+      "__last_update"
+    ],
+    "domain": [
+      [
+        "acuity_index",
+        "=",
+        "Medium"
+      ],
+      [
+        "spell_state",
+        "=",
+        "started"
+      ],
+      [
+        "spell_activity_id.user_ids",
+        "in",
+        50
+      ],
+      [
+        "location_id.usage",
+        "=",
+        "bed"
+      ]
+    ],
+    "context": {
+      "lang": "en_GB",
+      "tz": "Europe/London",
+      "uid": 50,
+      "search_default_acuity_index": 1,
+      "group_by": []
+    },
+    "offset": 0,
+    "limit": 40,
+    "sort": ""
+  },
+  "id": 442763535
+}

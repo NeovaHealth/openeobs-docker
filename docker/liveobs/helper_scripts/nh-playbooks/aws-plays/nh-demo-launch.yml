@@ -1,0 +1,63 @@
+---
+# NH AWS EC2 Demo Launcher Play 
+# Launches AMI as 'NHC Ready' ready for nh-nhc-installer.yml
+
+- hosts: localhost
+  connection: local
+  gather_facts: False
+
+  vars_files:
+    - vars/nh-demo-launch-vars.yml
+
+  vars:
+    keypair: "{{ nhp_keypair }}"
+    ami_id: "{{ nhp_amiid }}"
+
+  tasks:
+    - name: Launch new Instance
+      ec2:
+          key_name: "{{ nhp_keypair }}"
+          group: "{{ nhp_securitygroup }}"
+          instance_type: "{{ nhp_instancetype }}"
+          region: "{{ nhp_region }}"
+          image: "{{ nhp_amiid }}"
+          wait: true
+          instance_tags:
+             Name: "{{nhp_prefix}}-{{ nhp_build }}"
+             odooaddons: "{{ nh_build_odooaddons_filename }}"
+             nhcinvoke: "{{ nh_build_invoke_filename }}"
+             nhj_fqdn: "{{nhp_prefix}}-{{ nhp_build }}.{{ nhp_tld }}"
+             nhj_id: "{{nhp_prefix}}_{{ nhp_build }}"
+             nhj_type: "{{nhp_prefix}}"
+             nhj_user: "{{nhj_user}}"
+      register: ec2
+
+    - name: Add all instance public IPs to host group
+      add_host: hostname={{ item.public_ip }} groups=ec2deploy
+      with_items: ec2.instances
+
+    - name: Wait for SSH to come up
+      wait_for: host={{ item.public_dns_name }} port=22 delay=60 timeout=320 state=started
+      with_items: ec2.instances
+
+    - name: Register in route53 DNS name
+      route53:
+          command: create
+          overwrite: true
+          zone: "{{nhp_tld}}"
+          record: "{{nhp_prefix}}-{{ nhp_build }}.{{ nhp_tld }}"
+          type: A
+          ttl: 30
+          value: "{{ item.public_ip }}"
+      with_items: ec2.instances
+
+    - name: Update CNAME in route53 DNS name
+      route53:
+          command: create
+          overwrite: true
+          zone: openeobs.net
+          record: "{{ nhp_cname | lower }}.openeobs.net"
+          type: CNAME
+          ttl: 30
+          value: "{{nhp_prefix}}-{{ nhp_build }}.{{ nhp_tld }}"
+      with_items: ec2.instances

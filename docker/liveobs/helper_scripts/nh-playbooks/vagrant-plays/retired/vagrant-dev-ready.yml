@@ -1,0 +1,36 @@
+---
+# Playbook for ansible role development and testing
+
+- hosts: all
+  user: root
+
+  # environment:
+  #   http_proxy: "http://my-proxy.tld:3128"
+  #   https_proxy: "http://my-proxy.tld:3128"
+
+  vars:
+    - odoo_addons_path: "{{ root_deploy_path }}/odoo-addons"
+    - odoo_tag: openeobs-8-12
+    # - odoo_tag: nh-8-0715
+    - odoo_start_filepath: "{{ odoo_base_path }}/odoo.py"
+    - odoo_version: 8
+    - db_name: nhclinical
+    - nh_clinical_user: odoo
+    - odoo_inv_createdb: demo.default
+    - odoo_inv_install_uat: "{{ odoo_inv_createdb }}_uat"
+
+  roles:
+      - nh-dev # Common dependencies for the environment
+      - ntp
+      - python27
+      - virtualenv
+      - postgresql
+      # - nginx
+      - wkhtml
+      - phantomjs
+      # - nh-odoo
+      # - nh-clinical
+      # - java
+
+  handlers:
+    - include: library/handlers/handlers.yml

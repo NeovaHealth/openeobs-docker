@@ -1,0 +1,19 @@
+{
+  "jsonrpc": "2.0",
+  "method": "call",
+  "params": {
+    "model": "nh.clinical.wardboard",
+    "method": "fields_get",
+    "args": [],
+    "kwargs": {
+      "context": {
+        "lang": "en_GB",
+        "tz": "Europe/London",
+        "uid": 50,
+        "search_default_acuity_index": 1,
+        "active_model": "nh.clinical.wardboard"
+      }
+    }
+  },
+  "id": 535862897
+}

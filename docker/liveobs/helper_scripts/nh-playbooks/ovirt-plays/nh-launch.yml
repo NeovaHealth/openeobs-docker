@@ -1,0 +1,21 @@
+---
+# Launch instance on oVirt
+
+- hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - vars/nh-ovirt-vars-2016.yml
+
+  tasks:
+    - name: Launch new oVirt instance
+      action: ovirt
+          user={{ ov_user }}
+          url={{ ov_url }}
+          password={{ ov_pass }}
+          instance_name={{ ov_vm_name }}
+          image="nh-ov-base-01"
+          zone={{ ov_cluster }}
+          region=Default
+          resource_type=template

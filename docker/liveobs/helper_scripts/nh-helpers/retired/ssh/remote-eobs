@@ -1,0 +1,62 @@
+#!/bin/sh
+# remote connect to eObs deployments 
+# Rob Dyke
+# rob@neovahealth.co.uk
+
+#SITECODE=$2
+HOSTVAR=eobs-pilot
+IDFILE=nh-nhsgw01_rsa
+NHPROXYSRV=nh-proxyout01.nhtek.net
+NHPROXYPORT=3128
+
+#ssh -F .ssh/$1.conf -i .ssh/$1.id_rsa
+
+
+# Will this work?
+if [ -z "$2" ]
+then    # yes error(s) found, let send an email
+        echo "A site code would you really helpful"
+	exit
+else    # naa, everything looks 
+        SITECODE=$2
+fi
+
+
+# Purpose - Provide simple ssh session
+cli(){
+	ssh -F $HOME/.ssh/$SITECODE.conf -i $HOME/.ssh/$IDFILE $SITECODE-$HOSTVAR
+}
+
+# Purpose - Provide ssh session with reverse port forwarding to support environment http_proxy at remote back to Neova Health datacentre
+cli_proxy(){
+        ssh -F $HOME/.ssh/$SITECODE.conf -i $HOME/.ssh/$IDFILE -R 3128:$NHPROXYSRV:$NHPROXYPORT $SITECODE-$HOSTVAR
+}
+
+# Purpose - Provide ssh session with port forwarding to provide tunnel to open-eobs (desktop/mobile) at remote
+cli_web(){
+        ssh -F $HOME/.ssh/$SITECODE.conf -i $HOME/.ssh/$IDFILE -L 8080:127.0.0.1:80 $SITECODE-$HOSTVAR
+}
+
+cli_ldh(){
+        ssh -F $HOME/.ssh/ldh.conf -i $HOME/.ssh/$IDFILE $SITECODE
+}
+
+
+case "$1" in
+        cli)
+                cli
+                ;;
+        cli+proxy)
+                cli_proxy
+                ;;
+        cli+web)
+                cli_web
+                ;;
+        ldh+cli)
+                cli_ldh
+                ;;
+        *)
+                echo "Usage: $0 {cli|cli+proxy|cli+web|ldh+cli}"
+		echo "Use this script to connect to remote open-eObs deployments"
+		echo "Set defaults in script header"
+esac
