@@ -1,5 +1,8 @@
 #!/usr/bin/make
 
+create_addons_dir:
+	make -C ${folder} $@
+
 prebuild:
 	make -C ${folder} $@
 
@@ -12,4 +15,4 @@ test:
 publish:
 	make -C ${folder} $@
 
-.PHONY: prebuild build test publish
+.PHONY: create_addons_dir prebuild build test publish

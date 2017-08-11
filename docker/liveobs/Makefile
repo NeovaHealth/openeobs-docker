@@ -47,4 +47,4 @@ publish: login
 	@docker push ${registry}/liveobs:${VERSION}
 	@docker push ${registry}/liveobs:latest
 
-.PHONY: clean login build test publish
+.PHONY: create_addons_dir clean login build test publish
