@@ -1,5 +1,8 @@
 #!/usr/bin/make
 
+prebuild:
+	make -C ${folder} $@
+
 build:
 	make -C ${folder} $@
 
@@ -9,4 +12,4 @@ test:
 publish:
 	make -C ${folder} $@
 
-.PHONY: build test publish
+.PHONY: prebuild build test publish

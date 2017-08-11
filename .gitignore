@@ -4,7 +4,6 @@
 **/ubuntu-*-cloudimg-console.log
 **/Dockerfile-rspec
 **/liveobs_addons
-**/docker-gc
 
 .vagrant
 
