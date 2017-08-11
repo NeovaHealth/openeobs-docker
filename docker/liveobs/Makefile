@@ -23,8 +23,10 @@ login:
 prebuild:
 	mv ${addons_path}/client_modules/addons/* ${addons_path}/nhclinical/addons/* ${addons_path}/openeobs/addons/* liveobs_addons
 
-build: clean login
+create_addons_dir:
 	@mkdir -p liveobs_addons
+
+build: clean login
 	docker build --pull --no-cache -t ${registry}/liveobs:${VERSION} .
 	docker tag ${registry}/liveobs:${VERSION} liveobs:${VERSION}
 	@cd ..
