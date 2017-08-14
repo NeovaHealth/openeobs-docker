@@ -2,3 +2,5 @@ version: '2'
 services:
   web:
     entrypoint: /opt/odoo/createdb.sh
+    volumes:
+      - ./db_dumps:/opt/dumps

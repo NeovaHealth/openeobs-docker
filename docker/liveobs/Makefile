@@ -31,6 +31,12 @@ build: clean login
 	docker tag ${registry}/liveobs:${VERSION} liveobs:${VERSION}
 	@cd ..
 
+create_client_db:
+	@mkdir -p db_dumps
+	docker-compose rm -f
+	docker-compose build
+	docker-compose -f docker-compose.yml -f docker-compose-initdb.yml up --abort-on-container-exit
+
 test:
 	@echo "FROM ${registry}/liveobs:${VERSION}\nCMD /bin/bash" > Dockerfile-rspec
 	@docker build -t liveobs-rspec:${VERSION} -f Dockerfile-rspec .
@@ -47,4 +53,4 @@ publish: login
 	@docker push ${registry}/liveobs:${VERSION}
 	@docker push ${registry}/liveobs:latest
 
-.PHONY: create_addons_dir clean login build test publish
+.PHONY: create_addons_dir clean login build test publish create_client_db

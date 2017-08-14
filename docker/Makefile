@@ -15,4 +15,7 @@ test:
 publish:
 	make -C ${folder} $@
 
-.PHONY: create_addons_dir prebuild build test publish
+create_client_db:
+	make -C ${folder} $@
+
+.PHONY: create_addons_dir prebuild build test publish create_client_db
