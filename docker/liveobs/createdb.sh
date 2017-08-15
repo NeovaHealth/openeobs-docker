@@ -16,4 +16,5 @@ inv test.test_enable_all_modules -d liveobs
 export PGUSER=${USER}
 export PGPASSWORD=${PASSWORD}
 mkdir -p /opt/odoo/dumps
-pg_dump -h ${HOST} -d liveobs > /opt/odoo/dumps/liveobs.sql
+pg_dump -h ${HOST} -d liveobs > /tmp/liveobs.sql
+mv /tmp/liveobs.sql /opt/odoo/dumps
