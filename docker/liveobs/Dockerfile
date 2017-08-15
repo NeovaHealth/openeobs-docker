@@ -3,7 +3,7 @@ FROM 298801546701.dkr.ecr.eu-west-1.amazonaws.com/odoo
 USER root
 # Get /etc/odoo/server.cfg to use addons path with addons
 ADD createdb.sh /opt/odoo/createdb.sh
-RUN chown odoo /opt/odoo/createdb.sh
+RUN chown -R odoo /opt/odoo
 RUN chmod +x /opt/odoo/createdb.sh
 
 RUN set -x; \
