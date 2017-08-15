@@ -1,6 +1,8 @@
 version: '2'
 services:
   web:
+    environment:
+      - GO_PIPELINE_COUNTER="${GO_PIPELINE_COUNTER}"
     build:
       context: .
       dockerfile: Dockerfile-testing
