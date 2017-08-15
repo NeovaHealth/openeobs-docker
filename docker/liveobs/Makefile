@@ -33,7 +33,7 @@ build: clean login
 
 create_client_db:
 	@mkdir -p db_dumps
-	@chmod o+w db_dumps
+	@chmod -R 700 db_dumps
 	docker-compose rm -f
 	docker-compose build
 	docker-compose -f docker-compose.yml -f docker-compose-initdb.yml up --abort-on-container-exit
