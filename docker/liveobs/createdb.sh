@@ -17,5 +17,5 @@ export PGUSER=${USER}
 export PGPASSWORD=${PASSWORD}
 mkdir -p /opt/odoo/dumps
 pg_dump -h ${HOST} -d liveobs > /tmp/liveobs.sql
-ls -talh /opt/odoo/dumps
+ls -talh /opt/odoo
 mv /tmp/liveobs.sql /opt/odoo/dumps
