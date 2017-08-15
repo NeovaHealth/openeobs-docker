@@ -1,6 +1,7 @@
 version: '2'
 services:
   web:
+    build:
+      context: .
+      dockerfile: Dockerfile-testing
     entrypoint: /opt/odoo/createdb.sh
-    volumes:
-      - ./db_dumps:/opt/odoo/dumps:Z

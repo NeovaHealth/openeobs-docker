@@ -27,16 +27,17 @@ create_addons_dir:
 	@mkdir -p liveobs_addons
 
 build: clean login
-	docker build --pull --no-cache -t ${registry}/liveobs:${VERSION} .
+	docker build --pull --no-cache -t ${registry}/liveobs:${VERSION} -f Dockerfile .
 	docker tag ${registry}/liveobs:${VERSION} liveobs:${VERSION}
 	@cd ..
 
 create_client_db:
-	@mkdir -p db_dumps
-	@chmod -R 700 db_dumps
+	@docker build -t liveobs-testing:${VERSION} -f Dockerfile-testing .
 	docker-compose rm -f
 	docker-compose build
+	docker-compose -f docker-compose-initdb.yml build
 	docker-compose -f docker-compose.yml -f docker-compose-initdb.yml up --abort-on-container-exit
+	@docker rmi liveobs-testing:${VERSION}
 
 test:
 	@echo "FROM ${registry}/liveobs:${VERSION}\nCMD /bin/bash" > Dockerfile-rspec

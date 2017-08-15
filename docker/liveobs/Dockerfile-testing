@@ -1,0 +1,7 @@
+FROM 298801546701.dkr.ecr.eu-west-1.amazonaws.com/liveobs
+
+USER root
+ADD createdb.sh /opt/odoo/createdb.sh
+RUN chmod +x /opt/odoo/createdb.sh
+RUN apt-get update
+RUN apt-get install s3cmd -y --no-install-recommends

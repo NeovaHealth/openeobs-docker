@@ -15,7 +15,5 @@ inv demo.slam -d liveobs -c /etc/odoo/server.cfg
 inv test.test_enable_all_modules -d liveobs
 export PGUSER=${USER}
 export PGPASSWORD=${PASSWORD}
-mkdir -p /opt/odoo/dumps
 pg_dump -h ${HOST} -d liveobs > /tmp/liveobs.sql
-ls -talh /opt/odoo
-mv /tmp/liveobs.sql /opt/odoo/dumps
+s3cmd put /tmp/liveobs.sql s3://liveobs-provisioning-eu-west-1/artifacts/odoo/dbs/$GO_PIPELINE_COUNTER/liveobs.sql
