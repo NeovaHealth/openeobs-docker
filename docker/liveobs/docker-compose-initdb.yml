@@ -3,8 +3,4 @@ services:
   web:
     entrypoint: /opt/odoo/createdb.sh
     volumes:
-      - db_dumps:/opt/odoo/dumps:Z
-
-volumes:
-  db_dumps:
-    external: true
+      - ./db_dumps:/opt/odoo/dumps:Z
