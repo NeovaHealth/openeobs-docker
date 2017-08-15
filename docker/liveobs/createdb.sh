@@ -16,4 +16,5 @@ inv test.test_enable_all_modules -d liveobs
 export PGUSER=${USER}
 export PGPASSWORD=${PASSWORD}
 pg_dump -h ${HOST} -d liveobs > /tmp/liveobs.sql
+echo "GO PC = ${GO_PIPELINE_COUNTER}"
 s3cmd put /tmp/liveobs.sql "s3://liveobs-provisioning-eu-west-1/artifacts/odoo/dbs/${GO_PIPELINE_COUNTER}/liveobs.sql"
