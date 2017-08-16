@@ -39,6 +39,14 @@ create_client_db:
 	docker-compose -f docker-compose.yml -f docker-compose-initdb.yml up --abort-on-container-exit
 	@docker rmi liveobs-testing:${VERSION}
 
+run_unit_tests:
+	docker-compose rm -f
+	@echo "FROM postgres:9.3\nADD ./db_dumps/liveobs.sql /docker-entrypoint-initdb.d/init.sql" > Dockerfile-postgres-load-dump
+	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-unit-test.yml build
+	docker-compose -f docker-compose.yml -f docker-compose-unit-test.yml up -d db
+	sleep 15
+	docker-compose -f docker-compose.yml -f docker-compose-unit-test.yml up web
+
 test:
 	@echo "FROM ${registry}/liveobs:${VERSION}\nCMD /bin/bash" > Dockerfile-rspec
 	@docker build -t liveobs-rspec:${VERSION} -f Dockerfile-rspec .
