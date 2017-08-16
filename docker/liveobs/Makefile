@@ -45,10 +45,10 @@ get_sql_dump:
 	venv/bin/pip install awscli && aws s3 cp "s3://liveobs-provisioning-eu-west-1/artifacts/odoo/dbs/${GO_DEPENDENCY_LABEL_LIVEOBS_DOCKER}/liveobs.sql" db_dumps/liveobs.sql
 	rm -rf venv
 
-run_unit_tests:
+run_unit_tests: login
 	docker-compose rm -f
 	@echo "FROM postgres:9.3\nADD ./db_dumps/liveobs.sql /docker-entrypoint-initdb.d/init.sql" > Dockerfile-postgres-load-dump
-	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-unit-test.yml build
+	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-unit-test.yml build db
 	docker-compose -f docker-compose.yml -f docker-compose-unit-test.yml up -d db
 	sleep 15
 	docker-compose -f docker-compose.yml -f docker-compose-unit-test.yml up web
