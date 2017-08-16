@@ -39,6 +39,12 @@ create_client_db:
 	docker-compose -f docker-compose.yml -f docker-compose-initdb.yml up --abort-on-container-exit
 	@docker rmi liveobs-testing:${VERSION}
 
+get_sql_dump:
+	mkdir -p db_dumps
+	virtualenv venv
+	venv/bin/pip install awscli && aws s3 cp "s3://liveobs-provisioning-eu-west-1/artifacts/odoo/dbs/${GO_PIPELINE_COUNTER}/liveobs.sql" db_dumps/liveobs.sql
+	rm -rf venv
+
 run_unit_tests:
 	docker-compose rm -f
 	@echo "FROM postgres:9.3\nADD ./db_dumps/liveobs.sql /docker-entrypoint-initdb.d/init.sql" > Dockerfile-postgres-load-dump
