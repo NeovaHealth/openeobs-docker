@@ -4,6 +4,6 @@ services:
     environment:
       - GO_PIPELINE_COUNTER=${GO_PIPELINE_COUNTER}
     build:
-      context: .
+      context: testing
       dockerfile: Dockerfile-testing
     entrypoint: /opt/odoo/createdb.sh
