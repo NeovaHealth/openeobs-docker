@@ -27,12 +27,12 @@ create_addons_dir:
 	@mkdir -p liveobs_addons
 
 build: clean login
-	docker build --pull --no-cache -t ${registry}/liveobs:${VERSION} -f Dockerfile .
+	cd docker && docker build --pull --no-cache -t ${registry}/liveobs:${VERSION} -f Dockerfile .
 	docker tag ${registry}/liveobs:${VERSION} liveobs:${VERSION}
 	@cd ..
 
 create_client_db:
-	@docker build -t liveobs-testing:${VERSION} -f Dockerfile-testing .
+	@docker build -t liveobs-testing:${VERSION} -f Dockerfile-testing db_dumps
 	docker-compose rm -f
 	docker-compose build
 	docker-compose -f docker-compose-initdb.yml build
@@ -43,15 +43,22 @@ get_sql_dump:
 	mkdir -p db_dumps
 	virtualenv venv
 	venv/bin/pip install awscli && aws s3 cp "s3://liveobs-provisioning-eu-west-1/artifacts/odoo/dbs/${GO_DEPENDENCY_LABEL_LIVEOBS_DOCKER}/liveobs.sql" db_dumps/liveobs.sql
+	@echo "FROM postgres:9.3\nADD ./liveobs.sql /docker-entrypoint-initdb.d/init.sql" > db_dumps/Dockerfile-postgres-load-dump
 	rm -rf venv
+
+run_server: login
+	docker-compose rm -f
+	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml build db
+	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up -d db
+	sleep 15
+	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up web
 
 run_unit_tests: login
 	docker-compose rm -f
-	@echo "FROM postgres:9.3\nADD ./db_dumps/liveobs.sql /docker-entrypoint-initdb.d/init.sql" > Dockerfile-postgres-load-dump
-	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-unit-test.yml build db
-	docker-compose -f docker-compose.yml -f docker-compose-unit-test.yml up -d db
+	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml -f docker-compose-unit-test.yml build db
+	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml -f docker-compose-unit-test.yml up -d db
 	sleep 15
-	docker-compose -f docker-compose.yml -f docker-compose-unit-test.yml up web --exit-code-from web
+	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml -f docker-compose-unit-test.yml up web
 
 test:
 	@echo "FROM ${registry}/liveobs:${VERSION}\nCMD /bin/bash" > Dockerfile-rspec

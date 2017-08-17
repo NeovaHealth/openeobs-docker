@@ -17,4 +17,5 @@ export PGUSER=${USER}
 export PGPASSWORD=${PASSWORD}
 pg_dump -h ${HOST} -d liveobs > /tmp/liveobs.sql
 echo "GO PC = ${GO_PIPELINE_COUNTER}"
+echo -e "\nALTER DATABASE db OWNER to odoo\n" >> /tmp/liveobs.sql
 s3cmd put /tmp/liveobs.sql "s3://liveobs-provisioning-eu-west-1/artifacts/odoo/dbs/${GO_PIPELINE_COUNTER}/liveobs.sql"
