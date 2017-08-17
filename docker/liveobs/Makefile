@@ -22,6 +22,7 @@ login:
 
 prebuild:
 	mv ${addons_path}/client_modules/addons/* ${addons_path}/nhclinical/addons/* ${addons_path}/openeobs/addons/* liveobs_addons
+	mv liveobs_addons docker/
 
 create_addons_dir:
 	@mkdir -p liveobs_addons
