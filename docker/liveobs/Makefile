@@ -51,7 +51,7 @@ run_unit_tests: login
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-unit-test.yml build db
 	docker-compose -f docker-compose.yml -f docker-compose-unit-test.yml up -d db
 	sleep 15
-	docker-compose -f docker-compose.yml -f docker-compose-unit-test.yml up web
+	docker-compose -f docker-compose.yml -f docker-compose-unit-test.yml up web --exit-code-from web
 
 test:
 	@echo "FROM ${registry}/liveobs:${VERSION}\nCMD /bin/bash" > Dockerfile-rspec
