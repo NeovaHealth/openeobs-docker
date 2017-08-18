@@ -61,7 +61,7 @@ run_server: login
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml build db
 	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up -d db
 	sleep 15
-	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up -d web
+	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up -d --no-build web
 
 run_unit_tests: login
 	docker-compose rm -f
