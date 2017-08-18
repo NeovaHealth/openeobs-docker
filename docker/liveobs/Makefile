@@ -47,12 +47,21 @@ get_sql_dump:
 	@echo "FROM postgres:9.3\nADD ./liveobs.sql /docker-entrypoint-initdb.d/init.sql" > db_dumps/Dockerfile-postgres-load-dump
 	rm -rf venv
 
+install_sauce_connect:
+	curl -o sauce_connect.tar.gz -SL https://saucelabs.com/downloads/sc-4.4.9-linux.tar.gz
+	tar -xf sauce_connect.tar.gz
+	rm sauce_connect.tar.gz
+	mv sc-4.4.9-linux sauce_connect
+
+run_sauce_connect:
+	sauce_connect/bin/sc -u ${SAUCELABS_USERNAME} -k ${SAUCELABS_ACCESS_TOKEN} -l sauce_connect.log &
+
 run_server: login
 	docker-compose rm -f
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml build db
 	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up -d db
 	sleep 15
-	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up web
+	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up -d web
 
 run_unit_tests: login
 	docker-compose rm -f
