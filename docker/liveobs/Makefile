@@ -57,9 +57,10 @@ run_sauce_connect:
 	sauce_connect/bin/sc -u ${SAUCELABS_USERNAME} -k ${SAUCELABS_ACCESS_TOKEN} -l sauce_connect.log &
 
 install_chrome_driver:
-	curl -o chromedriver.zip -SL https://chromedriver.storage.googleapis.com/2.31/chromedriver_linux64.zip
-	unzip -d chromedriver chromedriver.zip
-	rm chromedriver.zip
+	# curl -o chromedriver.zip -SL https://chromedriver.storage.googleapis.com/2.31/chromedriver_linux64.zip
+	# unzip -d chromedriver chromedriver.zip
+	# rm chromedriver.zip
+	export PATH=chromedriver:$$PATH
 
 run_server: login
 	docker-compose rm -f
