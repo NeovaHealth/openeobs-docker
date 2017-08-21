@@ -24,13 +24,7 @@ run_unit_tests:
 get_sql_dump:
 	make -C ${folder} $@
 
-run_sauce_connect:
-	make -C ${folder} $@
-
 run_server:
 	make -C ${folder} $@
 
-install_sauce_connect:
-	make -C ${folder} $@
-
-.PHONY: create_addons_dir prebuild build test publish create_client_db run_unit_tests get_sql_dump install_sauce_connect run_sauce_connect run_server
+.PHONY: create_addons_dir prebuild build test publish create_client_db run_unit_tests get_sql_dump run_server
