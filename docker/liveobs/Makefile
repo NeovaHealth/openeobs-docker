@@ -49,6 +49,7 @@ get_sql_dump:
 
 run_server: login
 	docker-compose rm -f
+	docker pull ${registry}/liveobs:latest
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml build db
 	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up -d db
 	sleep 15
