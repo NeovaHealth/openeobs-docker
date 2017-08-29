@@ -11,9 +11,9 @@ try:
             subprocess.Popen(["docker-compose", "stop", "web"], stdout=subprocess.PIPE)
             time.sleep(2)
             if failing_tests:
-                sys.stdout.write('--------------------FAILING TESTS--------------------------')
+                sys.stdout.write('--------------------FAILING TESTS--------------------------\n')
                 for test in failing_tests:
-                    sys.stdout.write(' - {}'.format(test))
+                    sys.stdout.write(' - {}\n'.format(test))
                 sys.exit(1)
             else:
                 sys.exit(0)
