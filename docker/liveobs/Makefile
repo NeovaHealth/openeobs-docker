@@ -66,7 +66,7 @@ run_unit_tests: login
 	sleep 15
 	docker-compose \
 		-f docker-compose.yml \
-		-f docker-compose-liveohttp://type.method.ac/#bs-server.yml \
+		-f docker-compose-liveobs-server.yml \
 		-f docker-compose-unit-test.yml up web \
 		| python testing/odoo_log_parsing.py
 
