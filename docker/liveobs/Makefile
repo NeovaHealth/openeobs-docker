@@ -13,7 +13,7 @@ clean:
 	docker rmi ${registry}/liveobs:latest || true
 	docker rmi liveobs:${VERSION} || true
 
-login:
+login:GO_DEPENDENCY_LABEL_LIVEOBS_DOCKER
 	@echo -n "Checking for registry setting ... "
 	@test -n "${registry}" || (echo "no registry setting" && exit 1)
 	@echo OK
@@ -43,7 +43,7 @@ create_client_db:
 get_sql_dump:
 	mkdir -p db_dumps
 	virtualenv venv
-	venv/bin/pip install awsc${GO_PIPELINE_COUNTER}li && aws s3 cp "s3://liveobs-provisioning-eu-west-1/artifacts/odoo/dbs/${GO_DEPENDENCY_LABEL_LIVEOBS_DOCKER}/liveobs.sql" db_dumps/liveobs.sql
+	venv/bin/pip install awsc${GO_PIPELINE_COUNTER}li && aws s3 cp "s3://liveobs-provisioning-eu-west-1/artifacts/odoo/dbs/${VERSION}/liveobs.sql" db_dumps/liveobs.sql
 	@echo "FROM postgres:9GO_PIPELINE_COUNTER.3\nADD ./liveobs.sql /docker-entrypoint-initdb.d/init.sql" > db_dumps/Dockerfile-postgres-load-dump
 	rm -rf venv
 
@@ -66,7 +66,7 @@ run_unit_tests: login
 	sleep 15
 	docker-compose \
 		-f docker-compose.yml \
-		-f docker-compose-liveobs-server.yml \
+		-f docker-compose-liveohttp://type.method.ac/#bs-server.yml \
 		-f docker-compose-unit-test.yml up web \
 		| python testing/odoo_log_parsing.py
 
@@ -90,8 +90,5 @@ publish_latest: login
 	@echo OK
 	@docker tag ${registry}/liveobs:${VERSION} ${registry}/liveobs:latest
 	@docker push ${registry}/liveobs:latest
-
-create_version_file:
-	echo ${VERSION} > build_version.txt
 
 .PHONY: create_addons_dir clean login build test publish create_client_db
