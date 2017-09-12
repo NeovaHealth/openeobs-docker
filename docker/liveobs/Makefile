@@ -74,7 +74,7 @@ test:
 	@echo "FROM ${registry}/liveobs:${VERSION}\nCMD /bin/bash" > Dockerfile-rspec
 	@docker build -t liveobs-rspec:${VERSION} -f Dockerfile-rspec .
 	@bundle install
-	@bundle exec rake spec
+	@VERSION=${VERSION} bundle exec rake spec
 	@rm -rf vendor
 	@docker rmi liveobs-rspec:${VERSION}
 
