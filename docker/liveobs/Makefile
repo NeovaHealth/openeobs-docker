@@ -37,7 +37,7 @@ create_client_db:
 	docker-compose rm -f
 	docker-compose build
 	docker-compose -f docker-compose-initdb.yml build
-	docker-compose -f docker-compose.yml -f docker-compose-initdb.yml up --abort-on-container-exit
+	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-initdb.yml up --abort-on-container-exit
 	@docker rmi liveobs-testing:${VERSION}
 
 get_sql_dump:
