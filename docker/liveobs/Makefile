@@ -43,8 +43,8 @@ create_client_db:
 get_sql_dump:
 	mkdir -p db_dumps
 	virtualenv venv
-	venv/bin/pip install awsc${GO_PIPELINE_COUNTER}li && aws s3 cp "s3://liveobs-provisioning-eu-west-1/artifacts/odoo/dbs/${VERSION}/liveobs.sql" db_dumps/liveobs.sql
-	@echo "FROM postgres:9GO_PIPELINE_COUNTER.3\nADD ./liveobs.sql /docker-entrypoint-initdb.d/init.sql" > db_dumps/Dockerfile-postgres-load-dump
+	venv/bin/pip install awscli && aws s3 cp "s3://liveobs-provisioning-eu-west-1/artifacts/odoo/dbs/${VERSION}/liveobs.sql" db_dumps/liveobs.sql
+	@echo "FROM postgres:9.3\nADD ./liveobs.sql /docker-entrypoint-initdb.d/init.sql" > db_dumps/Dockerfile-postgres-load-dump
 	rm -rf venv
 
 run_server: login
