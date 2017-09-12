@@ -13,7 +13,7 @@ clean:
 	docker rmi ${registry}/liveobs:latest || true
 	docker rmi liveobs:${VERSION} || true
 
-login:GO_DEPENDENCY_LABEL_LIVEOBS_DOCKER
+login:
 	@echo -n "Checking for registry setting ... "
 	@test -n "${registry}" || (echo "no registry setting" && exit 1)
 	@echo OK
