@@ -33,4 +33,7 @@ stop_server:
 clean:
 	make -C ${folder} $@
 
-.PHONY: create_addons_dir prebuild build test publish create_client_db run_unit_tests get_sql_dump clean run_server stop_server
+create_version_file:
+	make -C ${folder} $@
+
+.PHONY: create_addons_dir prebuild build test publish create_client_db run_unit_tests get_sql_dump clean run_server stop_server create_version_file
