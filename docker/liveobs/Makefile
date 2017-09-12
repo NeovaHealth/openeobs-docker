@@ -82,8 +82,13 @@ publish: login
 	@echo -n "Checking for registry setting ... "
 	@test -n "${registry}" || (echo "no registry setting" && exit 1)
 	@echo OK
-	@docker tag ${registry}/liveobs:${VERSION} ${registry}/liveobs:latest
 	@docker push ${registry}/liveobs:${VERSION}
+
+publish_latest: login
+	@echo -n "Checking for registry setting ... "
+	@test -n "${registry}" || (echo "no registry setting" && exit 1)
+	@echo OK
+	@docker tag ${registry}/liveobs:${VERSION} ${registry}/liveobs:latest
 	@docker push ${registry}/liveobs:latest
 
 create_version_file:
