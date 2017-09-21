@@ -1,7 +1,7 @@
 version: '2'
 services:
   web:
-    image: 298801546701.dkr.ecr.eu-west-1.amazonaws.com/liveobs:latest
+    image: 298801546701.dkr.ecr.eu-west-1.amazonaws.com/${VERSION}:latest
     command: 'openerp-server -d db --log-level=debug --log-sql'
 
   db:

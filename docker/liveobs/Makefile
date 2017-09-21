@@ -49,11 +49,11 @@ get_sql_dump:
 
 run_server: login
 	docker-compose rm -f
-	docker pull ${registry}/liveobs:latest
+	docker pull ${registry}/liveobs:${VERSION}
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml build db
 	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up -d db
 	sleep 15
-	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up -d --no-build web
+	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up -d --no-build web
 
 stop_server:
 	docker-compose stop
@@ -61,10 +61,11 @@ stop_server:
 
 run_unit_tests: login
 	docker-compose rm -f
+	docker pull ${registry}/liveobs:${VERSION}
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml -f docker-compose-unit-test.yml build db
 	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml -f docker-compose-unit-test.yml up -d db
 	sleep 15
-	docker-compose \
+	VERSION=${VERSION} docker-compose \
 		-f docker-compose.yml \
 		-f docker-compose-liveobs-server.yml \
 		-f docker-compose-unit-test.yml up web \
