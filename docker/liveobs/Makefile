@@ -1,7 +1,7 @@
 #!/usr/bin/make
 
 REGION = $(shell echo ${registry} | awk -F. '{print $$4}')
-VERSION = $(shell echo `cat version_branch.txt`-$${GO_PIPELINE_LABEL:-1}-$${GO_STAGE_COUNTER:-1})
+VERSION = $(shell echo `cat version_branch.txt`-$${GO_PIPELINE_LABEL:-1})
 
 all: build test publish
 
