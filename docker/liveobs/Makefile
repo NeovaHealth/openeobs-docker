@@ -124,4 +124,4 @@ publish_latest: login
 	@docker tag ${registry}/liveobs:${VERSION} ${registry}/liveobs:latest
 	@docker push ${registry}/liveobs:latest
 
-.PHONY: create_addons_dir clean login build test publish create_client_db
+.PHONY: create_addons_dir clean login build test publish create_client_db run_unit_tests_coverage

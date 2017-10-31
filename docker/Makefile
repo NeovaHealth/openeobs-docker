@@ -21,6 +21,9 @@ create_client_db:
 run_unit_tests:
 	make -C ${folder} $@
 
+run_unit_tests_coverage:
+	make -C ${folder} $@
+
 get_sql_dump:
 	make -C ${folder} $@
 
