@@ -55,9 +55,23 @@ run_server: login
 	sleep 15
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up -d --no-build web
 
+run_integration_server: login
+	docker-compose rm -f
+	docker pull ${registry}/liveobs:${VERSION}
+	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml -f docker-compose-integration-test.yml build db
+	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml -f docker-compose-integration-test.yml up -d db
+	sleep 15
+	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml -f docker-compose-integration-test.yml up -d --no-build web
+
 stop_server:
 	docker-compose stop
 	docker-compose rm -f
+
+collect_unit_test_coverage:
+	docker cp web:/opt/nh/.coverage unit_test_coverage
+
+collect_integration_test_coverage:
+	docker cp web:/opt/nh/.coverage integration_test_coverage
 
 run_unit_tests: login
 	docker-compose rm -f
@@ -70,6 +84,24 @@ run_unit_tests: login
 		-f docker-compose-liveobs-server.yml \
 		-f docker-compose-unit-test.yml up web \
 		| python testing/odoo_log_parsing.py
+
+run_unit_tests_coverage:
+	sed -i "s/__VERSION__/${VERSION}/" testing/Dockerfile-coverage
+	@cd testing && docker build -t liveobs-coverage:${VERSION} -f Dockerfile-coverage . && cd ..
+	docker-compose rm -f
+	VERSION=${VERSION} docker-compose \
+		-f docker-compose.yml \
+		-f docker-compose-liveobs-server.yml \
+		-f docker-compose-unit-test-coverage.yml build db
+	docker-compose \
+		-f docker-compose.yml \
+		-f docker-compose-liveobs-server.yml \
+		-f docker-compose-unit-test-coverage.yml up -d db
+	sleep 15
+	VERSION=${VERSION} docker-compose \
+		-f docker-compose.yml \
+		-f docker-compose-liveobs-server.yml \
+		-f docker-compose-unit-test-coverage.yml up --abort-on-container-exit web
 
 test:
 	@echo "FROM ${registry}/liveobs:${VERSION}\nCMD /bin/bash" > Dockerfile-rspec
