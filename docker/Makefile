@@ -1,5 +1,7 @@
 #!/usr/bin/make
 
+all: stop_server clean get_sql_dump
+
 create_addons_dir:
 	make -C ${folder} $@
 
