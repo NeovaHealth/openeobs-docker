@@ -68,10 +68,7 @@ stop_server:
 	docker-compose rm -f
 
 collect_unit_test_coverage:
-	docker cp web:/opt/nh/.coverage unit_test_coverage
-
-collect_integration_test_coverage:
-	docker cp web:/opt/nh/.coverage integration_test_coverage
+	venv/bin/pip install awscli && aws s3 cp "s3://liveobs-build/artifacts/odoo/coverage/${VERSION}/unit_test_coverage.xml" unit_test_coverage.xml
 
 run_unit_tests: login
 	docker-compose rm -f
