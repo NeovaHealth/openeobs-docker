@@ -2,6 +2,6 @@ version: '2'
 services:
   web:
     environment:
-      - GO_PIPELINE_COUNTER=${VERSION}
+      - VERSION=${VERSION}
     image: liveobs-coverage:${VERSION}
     entrypoint: /opt/odoo/coverage.sh
