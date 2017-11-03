@@ -1,0 +1,3 @@
+[run]
+source = liveobs_addons
+omit = *system_site_packages*
