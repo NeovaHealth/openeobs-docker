@@ -1,2 +1,6 @@
 [run]
 source = /opt/odoo/liveobs_addons
+branch = True
+omit =
+        *__init__*
+        *__openerp__*
