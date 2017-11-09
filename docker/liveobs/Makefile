@@ -99,7 +99,8 @@ run_unit_tests_coverage:
 	VERSION=${VERSION} docker-compose \
 		-f docker-compose.yml \
 		-f docker-compose-liveobs-server.yml \
-		-f docker-compose-unit-test-coverage.yml up --abort-on-container-exit web
+		-f docker-compose-unit-test-coverage.yml up web \
+		| python testing/odoo_log_parsing.py
 
 test:
 	@echo "FROM ${registry}/liveobs:${VERSION}\nCMD /bin/bash" > Dockerfile-rspec
