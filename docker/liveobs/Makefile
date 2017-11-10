@@ -1,9 +1,10 @@
 #!/usr/bin/make
 
 REGION = $(shell echo ${registry} | awk -F. '{print $$4}')
-VERSION = $(shell echo `cat version_branch.txt`-$${GO_PIPELINE_LABEL:-1})
+VERSION = $(shell echo `cat version_branch.txt`)
 
-all: build test publish
+all: build test publish create_client_db
+unit_test_on_gocd: stop_server clean get_sql_dump run_unit_tests
 
 clean:
 	@echo -n "Checking for registry setting ... "
