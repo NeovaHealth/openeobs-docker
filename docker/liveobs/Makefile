@@ -3,8 +3,6 @@
 REGION = $(shell echo ${registry} | awk -F. '{print $$4}')
 VERSION = $(shell echo `cat version_branch.txt`)
 
-all: build test publish
-
 clean:
 	@echo -n "Checking for registry setting ... "
 	@test -n "${registry}" || (echo "no registry setting" && exit 1)

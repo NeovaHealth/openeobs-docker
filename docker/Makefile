@@ -1,5 +1,8 @@
 #!/usr/bin/make
 
+all: build test publish
+unit_test_on_gocd: stop_server clean get_sql_dump run_unit_tests_coverage
+
 create_addons_dir:
 	make -C ${folder} $@
 
