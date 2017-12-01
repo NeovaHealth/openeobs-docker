@@ -37,7 +37,7 @@ create_client_db:
 	@cd testing && docker build -t liveobs-testing:${VERSION} -f Dockerfile-testing --build-arg version=${VERSION} . && cd ..
 	docker-compose rm -f
 	docker-compose build
-	docker-compose -f docker-compose-initdb.yml build
+	VERSION=${VERSION} docker-compose -f docker-compose-initdb.yml build
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-initdb.yml up --abort-on-container-exit
 	@docker rmi liveobs-testing:${VERSION}
 
