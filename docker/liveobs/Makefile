@@ -34,7 +34,7 @@ build: clean login
 	@cd ..
 
 create_client_db:
-	@cd testing && docker build -t liveobs-testing:${VERSION} -f Dockerfile-testing . && cd ..
+	@cd testing && docker build -t liveobs-testing:${VERSION} -f Dockerfile-testing --build-arg version=${VERSION} . && cd ..
 	docker-compose rm -f
 	docker-compose build
 	docker-compose -f docker-compose-initdb.yml build
