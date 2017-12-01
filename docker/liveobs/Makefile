@@ -3,6 +3,9 @@
 REGION = $(shell echo ${registry} | awk -F. '{print $$4}')
 VERSION = $(shell echo `cat version_branch.txt`)
 
+all: build test publish create_client_db
+unit_test_on_gocd: stop_server clean get_sql_dump run_unit_tests
+
 clean:
 	@echo -n "Checking for registry setting ... "
 	@test -n "${registry}" || (echo "no registry setting" && exit 1)
@@ -31,7 +34,7 @@ build: clean login
 	@cd ..
 
 create_client_db:
-	@cd testing && docker build -t liveobs-testing:${VERSION} -f Dockerfile-testing . && cd ..
+	@cd testing && docker build -t liveobs-testing:${VERSION} -f Dockerfile-testing --build-arg version=${VERSION} . && cd ..
 	docker-compose rm -f
 	docker-compose build
 	docker-compose -f docker-compose-initdb.yml build
