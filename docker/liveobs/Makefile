@@ -87,6 +87,7 @@ run_unit_tests: login
 run_unit_tests_coverage:
 	sed -i "s/__VERSION__/${VERSION}/" testing/Dockerfile-coverage
 	@cd testing && docker build -t liveobs-coverage:${VERSION} -f Dockerfile-coverage . && cd ..
+	@mkdir test_results
 	docker-compose rm -f
 	VERSION=${VERSION} docker-compose \
 		-f docker-compose.yml \
