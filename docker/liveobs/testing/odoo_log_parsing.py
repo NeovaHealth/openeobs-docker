@@ -24,7 +24,9 @@ while 1:
             line_match = TEST_END_REGEX.match(line).groups()
             test_name = line_match[0]
             test_results = receiver.results()
-            destination.write_reports(test_name, test_name, test_results)
+            package_name_els = test_name.split('.')
+            package_name = '.'.join(package_name_els[:3])
+            destination.write_reports(test_name, test_name, test_results, package_name=package_name)
         if 'FAIL:' in line:
             failing_tests.append(line)
             receiver.failure('', '')
