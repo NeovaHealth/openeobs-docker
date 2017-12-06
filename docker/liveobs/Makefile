@@ -1,7 +1,18 @@
 #!/usr/bin/make
 
+ifeq ($(uname), 'Linux')
+VENV_PIP_PATH = 'bin/pip'
+else
+VENV_PIP_PATH = 'Scripts/pip'
+endif
+
 REGION = $(shell echo ${registry} | awk -F. '{print $$4}')
+
+# Skips the reading of the file if VERSION is already defined.
+# Allows running locally like `VERSION=foo make run_server`
+ifndef VERSION
 VERSION = $(shell echo `cat version_branch.txt`)
+endif
 
 all: build test publish create_client_db
 unit_test_on_gocd: stop_server clean get_sql_dump run_unit_tests
@@ -44,11 +55,10 @@ create_client_db:
 get_sql_dump:
 	mkdir -p db_dumps
 	virtualenv venv
-	venv/bin/pip install awscli && aws s3 cp "s3://liveobs-provisioning-eu-west-1/artifacts/odoo/dbs/${VERSION}/liveobs.sql" db_dumps/liveobs.sql
-	@echo "FROM postgres:9.3\nADD ./liveobs.sql /docker-entrypoint-initdb.d/init.sql" > db_dumps/Dockerfile-postgres-load-dump
+	venv/$(VENV_PIP_PATH) install awscli && aws s3 cp "s3://liveobs-provisioning-eu-west-1/artifacts/odoo/dbs/${VERSION}/liveobs.sql" db_dumps/liveobs.sql
 	rm -rf venv
 
-run_server: login
+run_server: login get_sql_dump
 	docker-compose rm -f
 	docker pull ${registry}/liveobs:${VERSION}
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml build db

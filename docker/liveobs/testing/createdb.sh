@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 until $(nc -z $HOST 5432); do
   echo "Waiting for PostgreSQL to come up"
   sleep 1
