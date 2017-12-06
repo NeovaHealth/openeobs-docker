@@ -4,7 +4,7 @@ from xunitgen import XunitDestination, EventReceiver, toxml
 destination = XunitDestination('./test_results')
 receiver = None
 TEST_START_REGEX = re.compile(r".* openerp\.modules\.module: (.*) running tests\.")
-TEST_CASE_REGEX = re.compile(r".*: ([a-zA-z0-9_]+) \(([a-zA-z\._]+)\)")
+TEST_CASE_REGEX = re.compile(r".*: ([a-zA-Z0-9_]+) \(([a-zA-Z0-9\._]+)\)")
 TEST_END_REGEX = re.compile(r".* (.+): Ran (\d+) test(s)? in ([0-9\.]+)")
 failing_tests = []
 
