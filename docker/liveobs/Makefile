@@ -1,6 +1,7 @@
 #!/usr/bin/make
 
-ifeq ($(uname), 'Linux')
+OS = $(shell uname)
+ifeq ($(OS), Linux)
 VENV_PIP_PATH = 'bin/pip'
 else
 VENV_PIP_PATH = 'Scripts/pip'
