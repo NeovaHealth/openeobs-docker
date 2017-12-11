@@ -45,11 +45,12 @@ build: clean login
 	docker tag ${registry}/liveobs:${VERSION} liveobs:${VERSION}
 	@cd ..
 
-create_client_db:
+create_client_db: login
+	# Build an image with the files necessary to build a demo database with invoke scripts, dump to SQL file, and push it to S3 for any test instances to use.
 	@cd testing && docker build -t liveobs-testing:${VERSION} -f Dockerfile-testing --build-arg version=${VERSION} . && cd ..
 	docker-compose rm -f
-	docker-compose build
 	VERSION=${VERSION} docker-compose -f docker-compose-initdb.yml build
+	# Bring up the container and tell it to run the create DB script.
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-initdb.yml up --abort-on-container-exit
 	@docker rmi liveobs-testing:${VERSION}
 
