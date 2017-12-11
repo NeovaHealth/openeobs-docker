@@ -29,7 +29,7 @@ with open('unit_test.log', 'rb') as log_file:
             line_match = TEST_CASE_REGEX.match(line).groups()
             test_time = get_timestamp(line_match[0])
             test_name = line_match[1].replace('openerp.addons.', '')
-            test_location = line_match[2]
+            test_location = line_match[2].replace('openerp.addons', '')
             if receiver.current_case:
                 receiver.end_case(receiver.current_case.name, test_time)
             receiver.begin_case(test_name, test_time, test_location)
