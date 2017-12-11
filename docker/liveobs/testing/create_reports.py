@@ -28,7 +28,7 @@ with open('unit_test.log', 'rb') as log_file:
         if 'test_' in line and '(openerp.addons.' in line:
             line_match = TEST_CASE_REGEX.match(line).groups()
             test_time = get_timestamp(line_match[0])
-            test_name = line_match[1]
+            test_name = line_match[1].replace('openerp.addons.', '')
             test_location = line_match[2]
             if receiver.current_case:
                 receiver.end_case(receiver.current_case.name, test_time)
@@ -41,10 +41,13 @@ with open('unit_test.log', 'rb') as log_file:
             test_name = line_match[1]
             test_results = receiver.results()
             package_name_els = test_name.split('.')
-            package_name = '.'.join(package_name_els[:3])
-            destination.write_reports(test_name, test_name, test_results, package_name=package_name)
+            suite_name = "{}.py".format(package_name_els[-1])
+            package_name = '/'.join(package_name_els[2:-1])
+            test_name = test_name.replace('openerp.addons.', '')
+            destination.write_reports(test_name, suite_name, test_results, package_name=package_name)
         if line[:6] == ': FAIL':
             line_match = TEST_FAIL_REGEX.match(line).groups()
+            test_name = line_match[1].replace('openerp.addons.', '')
             receiver.failure('', line_match[1])
         if 'FAIL:' in line:
             failing_tests.append(line)
