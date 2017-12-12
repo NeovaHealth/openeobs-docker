@@ -49,7 +49,6 @@ create_client_db: login
 	# Build an image with the files necessary to build a demo database with invoke scripts, dump to SQL file, and push it to S3 for any test instances to use.
 	@cd testing && docker build -t liveobs-testing:${VERSION} -f Dockerfile-testing --build-arg version=${VERSION} . && cd ..
 	docker-compose rm -f
-	VERSION=${VERSION} docker-compose -f docker-compose-initdb.yml build
 	# Bring up the container and tell it to run the create DB script.
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-initdb.yml up --abort-on-container-exit
 	@docker rmi liveobs-testing:${VERSION}
@@ -77,8 +76,8 @@ run_integration_server: login
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml -f docker-compose-integration-test.yml up -d --no-build web
 
 stop_server:
-	docker-compose stop
-	docker-compose rm -f
+	# Stop containers specified in the `docker-compose.yml` file then remove them.
+	docker-compose rm --stop -f
 
 collect_unit_test_coverage:
 	virtualenv venv
@@ -135,5 +134,13 @@ publish_latest: login
 	@echo OK
 	@docker tag ${registry}/liveobs:${VERSION} ${registry}/liveobs:latest
 	@docker push ${registry}/liveobs:latest
+
+reset_demo_data_with_invoke_scripts:
+	# Container must be running before you run this script.
+	echo "Not yet implemented."
+
+reset_demo_data_with_sql_file:
+	# Container must be running before you run this script.
+	echo "Not yet implemented."
 
 .PHONY: create_addons_dir clean login build test publish create_client_db run_unit_tests_coverage
