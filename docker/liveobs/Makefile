@@ -93,11 +93,16 @@ run_unit_tests: login
 		-f docker-compose.yml \
 		-f docker-compose-liveobs-server.yml \
 		-f docker-compose-unit-test.yml up web \
-		| python testing/odoo_log_parsing.py
+		| tee unit_test.log
+
+create_unit_test_report:
+	python testing/create_reports.py
+	python testing/merge_reports.py
 
 run_unit_tests_coverage:
 	sed -i "s/__VERSION__/${VERSION}/" testing/Dockerfile-coverage
 	@cd testing && docker build -t liveobs-coverage:${VERSION} -f Dockerfile-coverage . && cd ..
+	@mkdir test_results
 	docker-compose rm -f
 	VERSION=${VERSION} docker-compose \
 		-f docker-compose.yml \
@@ -112,7 +117,7 @@ run_unit_tests_coverage:
 		-f docker-compose.yml \
 		-f docker-compose-liveobs-server.yml \
 		-f docker-compose-unit-test-coverage.yml up web \
-		| python testing/odoo_log_parsing.py
+		| tee unit_test.log
 
 test:
 	@echo "FROM ${registry}/liveobs:${VERSION}\nCMD /bin/bash" > Dockerfile-rspec
