@@ -55,9 +55,7 @@ create_client_db: login
 
 get_sql_dump:
 	mkdir -p db_dumps
-	virtualenv venv
-	venv/$(VENV_PIP_PATH) install awscli && aws s3 cp "s3://liveobs-provisioning-eu-west-1/artifacts/odoo/dbs/${VERSION}/liveobs.sql" db_dumps/liveobs.sql
-	rm -rf venv
+	aws s3 cp "s3://liveobs-provisioning-eu-west-1/artifacts/odoo/dbs/${VERSION}/liveobs.sql" db_dumps/liveobs.sql
 
 run_server: login get_sql_dump
 	docker-compose rm -f
