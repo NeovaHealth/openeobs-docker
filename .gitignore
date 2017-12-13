@@ -6,7 +6,7 @@
 **/Dockerfile-rspec
 **/liveobs_addons
 **/venv
-**/db_dumps
+*.sql
 
 .vagrant
 
