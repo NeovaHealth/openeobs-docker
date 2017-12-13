@@ -108,6 +108,24 @@ run_unit_tests_coverage:
 		-f docker-compose-unit-test-coverage.yml up web \
 		| tee unit_test.log
 
+run_integration_server_coverage:
+	sed -i "s/__VERSION__/${VERSION}/" testing/Dockerfile-integration-coverage
+	@cd testing && docker build -t liveobs-coverage:${VERSION} -f Dockerfile-integration-coverage . && cd ..
+	docker-compose rm -f
+	VERSION=${VERSION} docker-compose \
+		-f docker-compose.yml \
+		-f docker-compose-liveobs-server.yml \
+		-f docker-compose-integration-test-coverage.yml build db
+	docker-compose \
+		-f docker-compose.yml \
+		-f docker-compose-liveobs-server.yml \
+		-f docker-compose-integration-test-coverage.yml up -d db
+	sleep 30
+	VERSION=${VERSION} docker-compose \
+		-f docker-compose.yml \
+		-f docker-compose-liveobs-server.yml \
+		-f docker-compose-integration-test-coverage.yml up -d web
+
 test:
 	@echo "FROM ${registry}/liveobs:${VERSION}\nCMD /bin/bash" > Dockerfile-rspec
 	@docker build -t liveobs-rspec:${VERSION} -f Dockerfile-rspec .

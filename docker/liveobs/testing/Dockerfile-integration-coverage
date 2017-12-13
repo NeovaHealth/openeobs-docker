@@ -1,0 +1,8 @@
+FROM 298801546701.dkr.ecr.eu-west-1.amazonaws.com/liveobs:develop
+
+USER root
+ADD integration_coverage.sh /opt/odoo/coverage.sh
+ADD .coveragerc /.coveragerc
+RUN chmod +x /opt/odoo/coverage.sh
+RUN apt-get update
+RUN apt-get install s3cmd -y --no-install-recommends
