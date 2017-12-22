@@ -15,41 +15,41 @@ ifndef VERSION
 VERSION = $(shell echo `cat version_branch.txt`)
 endif
 
+# Test if version has build number suffix.
+VERSION_INCLUDES_BUILD_NUMBER=$(shell echo $(VERSION) | egrep _[0-9]+$)
+# If there is a build number suffix create a version without it.
+LATEST_VERSION=$(shell echo $(VERSION) | sed -E 's/_[0-9]+//')
+
 all: build test publish create_client_db
 unit_test_on_gocd: stop_server clean get_sql_dump run_unit_tests
 
-clean:
+check_for_registry_settings:
 	@echo -n "Checking for registry setting ... "
 	@test -n "${registry}" || (echo "no registry setting" && exit 1)
 	@echo OK
+
+clean: check_for_registry_settings
 	docker rmi ${registry}/liveobs:${VERSION} || true
 	docker rmi ${registry}/liveobs:latest || true
-	docker rmi liveobs:${VERSION} || true
 
-login:
-	@echo -n "Checking for registry setting ... "
-	@test -n "${registry}" || (echo "no registry setting" && exit 1)
-	@echo OK
+login: check_for_registry_settings
 	@echo -n "Logging into ECR..."
 	@`aws ecr get-login --no-include-email --region "${REGION}"`
 
-prebuild:
-	mv ${addons_path}/client_modules/addons/* ${addons_path}/nhclinical/addons/* ${addons_path}/openeobs/addons/* liveobs_addons
-	mv liveobs_addons docker/
-
-create_addons_dir:
-	@mkdir -p liveobs_addons
-
+# TODO This target depends on their being a populated
+# `docker/liveobs/docker/liveobs_addons` directory. That step is done in
+# maintainer-quality tools, so bring 'move_addons_into_dir' target from `
+# maintainer-quality-tools/gocd/Makefile` into this Makefile and make it a
+# dependency of this 'build' target.
 build: clean login
 	cd docker && docker build --pull --no-cache -t ${registry}/liveobs:${VERSION} -f Dockerfile .
-	docker tag ${registry}/liveobs:${VERSION} liveobs:${VERSION}
-	@cd ..
+	cd ..
 
 create_client_db: login
-	# Build an image with the files necessary to build a demo database with invoke scripts, dump to SQL file, and push it to S3 for any test instances to use.
+# Build an image with the files necessary to build a demo database with invoke scripts, dump to SQL file, and push it to S3 for any test instances to use.
 	@cd testing && docker build -t liveobs-testing:${VERSION} -f Dockerfile-testing --build-arg version=${VERSION} . && cd ..
 	docker-compose rm -f
-	# Bring up the container and tell it to run the create DB script.
+# Bring up the container and tell it to run the create DB script.
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-initdb.yml up --abort-on-container-exit
 	@docker rmi liveobs-testing:${VERSION}
 
@@ -74,7 +74,7 @@ run_integration_server: login
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml -f docker-compose-integration-test.yml up -d --no-build web
 
 stop_server:
-	# Stop containers specified in the `docker-compose.yml` file then remove them.
+# Stop containers specified in the `docker-compose.yml` file then remove them.
 	docker-compose rm --stop -f
 
 collect_unit_test_coverage:
@@ -125,25 +125,33 @@ test:
 	@rm -rf vendor
 	@docker rmi liveobs-rspec:${VERSION}
 
-publish: login
-	@echo -n "Checking for registry setting ... "
-	@test -n "${registry}" || (echo "no registry setting" && exit 1)
-	@echo OK
-	@docker push ${registry}/liveobs:${VERSION}
+publish: check_for_registry_settings login
+# Versions like `awesome-feature_54` make it difficult for team members to
+# pull down the latest version of that feature because they need to lookup
+# the latest build number. Adding an extra tag without the build number
+# suffix allows the latest image to be easily pulled with a simple
+# canonical tag like: `awesome-feature`
+ifeq ($(VERSION_INCLUDES_BUILD_NUMBER),)
+# Version does not include build number.
+	docker push ${registry}/liveobs:${VERSION}
+else
+# Version includes build number.
+	docker tag ${registry}/liveobs:${VERSION} ${registry}/liveobs:${LATEST_VERSION}
+	docker push ${registry}/liveobs:${VERSION}
+	docker push ${registry}/liveobs:${LATEST_VERSION}
+endif
 
-publish_latest: login
-	@echo -n "Checking for registry setting ... "
-	@test -n "${registry}" || (echo "no registry setting" && exit 1)
-	@echo OK
+# TODO Is this used anywhere?
+publish_latest: check_for_registry_settings login
 	@docker tag ${registry}/liveobs:${VERSION} ${registry}/liveobs:latest
 	@docker push ${registry}/liveobs:latest
 
 reset_demo_data_with_invoke_scripts:
-	# Container must be running before you run this script.
+# Container must be running before you run this script.
 	echo "Not yet implemented."
 
 reset_demo_data_with_sql_file:
-	# Container must be running before you run this script.
+# Container must be running before you run this script.
 	echo "Not yet implemented."
 
-.PHONY: create_addons_dir clean login build test publish create_client_db run_unit_tests_coverage
+.PHONY: check_for_registry_settings clean login build test publish create_client_db run_unit_tests_coverage
