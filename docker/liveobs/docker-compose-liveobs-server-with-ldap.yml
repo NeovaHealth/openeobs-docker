@@ -1,0 +1,28 @@
+version: '2'
+services:
+  web:
+    image: 298801546701.dkr.ecr.eu-west-1.amazonaws.com/liveobs:${VERSION}
+    command: 'openerp-server -d db --log-level=debug --log-sql'
+    links:
+      - db
+      - ldap
+
+  db:
+    build:
+      context: db_dumps
+      dockerfile: Dockerfile-postgres-load-dump
+
+  ldap:
+    image: osixia/openldap
+
+  phpldapadmin:
+    image: osixia/phpldapadmin
+    ports:
+      - "80:80"
+    links:
+      - ldap
+    depends_on:
+      - ldap
+    environment:
+      - PHPLDAPADMIN_LDAP_HOSTS=ldap
+      - PHPLDAPADMIN_HTTPS=false

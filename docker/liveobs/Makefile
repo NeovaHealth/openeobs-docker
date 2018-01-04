@@ -64,6 +64,16 @@ run_integration_server: login
 	sleep 15
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml -f docker-compose-integration-test.yml up -d --no-build web
 
+run_server_with_ldap: login
+	docker-compose rm -f
+	docker pull ${registry}/liveobs:${VERSION}
+	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml -f docker-compose-integration-test.yml build db
+	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server-with-ldap.yml up -d db
+	sleep 15
+	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server-with-ldap.yml up -d --no-build web
+	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server-with-ldap.yml up -d --no-build ldap
+	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server-with-ldap.yml up -d --no-build phpldapadmin
+
 stop_server:
 	docker-compose stop
 	docker-compose rm -f
