@@ -1,5 +1,8 @@
 #!/usr/bin/make
 
+all: build test publish
+unit_test_on_gocd: stop_server clean get_sql_dump login run_unit_tests_coverage
+
 create_addons_dir:
 	make -C ${folder} $@
 
@@ -16,6 +19,9 @@ publish:
 	make -C ${folder} $@
 
 create_client_db:
+	make -C ${folder} $@
+
+login:
 	make -C ${folder} $@
 
 run_unit_tests:
@@ -39,4 +45,7 @@ clean:
 create_version_file:
 	make -C ${folder} $@
 
-.PHONY: create_addons_dir prebuild build test publish create_client_db run_unit_tests get_sql_dump clean run_server stop_server create_version_file
+create_unit_test_report:
+	make -C ${folder} $@
+
+.PHONY: create_addons_dir prebuild build test publish create_client_db run_unit_tests get_sql_dump clean run_server stop_server create_version_file create_unit_test_report

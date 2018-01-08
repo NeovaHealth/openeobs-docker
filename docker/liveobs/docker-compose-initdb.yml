@@ -6,4 +6,6 @@ services:
     build:
       context: testing
       dockerfile: Dockerfile-testing
+      args:
+        version: ${VERSION}
     entrypoint: /opt/odoo/createdb.sh
