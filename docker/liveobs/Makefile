@@ -37,7 +37,7 @@ create_client_db:
 	@cd testing && docker build -t liveobs-testing:${VERSION} -f Dockerfile-testing --build-arg version=${VERSION} . && cd ..
 	docker-compose rm -f
 	docker-compose build
-	docker-compose -f docker-compose-initdb.yml build
+	VERSION=${VERSION} docker-compose -f docker-compose-initdb.yml build
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-initdb.yml up --abort-on-container-exit
 	@docker rmi liveobs-testing:${VERSION}
 
@@ -67,7 +67,7 @@ run_integration_server: login
 run_server_with_ldap: login
 	docker-compose rm -f
 	docker pull ${registry}/liveobs:${VERSION}
-	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server-wth-ldap.yml build db
+	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml -f docker-compose-integration-test.yml build db
 	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server-with-ldap.yml up -d db
 	sleep 15
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server-with-ldap.yml up -d --no-build web
@@ -92,11 +92,16 @@ run_unit_tests: login
 		-f docker-compose.yml \
 		-f docker-compose-liveobs-server.yml \
 		-f docker-compose-unit-test.yml up web \
-		| python testing/odoo_log_parsing.py
+		| tee unit_test.log
+
+create_unit_test_report:
+	python testing/create_reports.py
+	python testing/merge_reports.py
 
 run_unit_tests_coverage:
 	sed -i "s/__VERSION__/${VERSION}/" testing/Dockerfile-coverage
 	@cd testing && docker build -t liveobs-coverage:${VERSION} -f Dockerfile-coverage . && cd ..
+	@mkdir test_results
 	docker-compose rm -f
 	VERSION=${VERSION} docker-compose \
 		-f docker-compose.yml \
@@ -110,7 +115,8 @@ run_unit_tests_coverage:
 	VERSION=${VERSION} docker-compose \
 		-f docker-compose.yml \
 		-f docker-compose-liveobs-server.yml \
-		-f docker-compose-unit-test-coverage.yml up --abort-on-container-exit web
+		-f docker-compose-unit-test-coverage.yml up web \
+		| tee unit_test.log
 
 test:
 	@echo "FROM ${registry}/liveobs:${VERSION}\nCMD /bin/bash" > Dockerfile-rspec
