@@ -42,7 +42,7 @@ login: check_for_registry_settings
 # maintainer-quality-tools/gocd/Makefile` into this Makefile and make it a
 # dependency of this 'build' target.
 build: clean login
-	cd docker && docker build --pull --no-cache -t ${registry}/liveobs:${VERSION} -f Dockerfile .
+	cd docker && docker build --pull --no-cache -t ${registry}/liveobs:${VERSION} -f Dockerfile-addons-baked-in .
 	cd ..
 
 create_client_db: login
@@ -64,6 +64,9 @@ run_server: login get_sql_dump
 	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up -d db
 	sleep 15
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up -d --no-build web
+
+run_server_for_development:
+	docker-compose -f docker-compose.yml -f docker-compose-development.yml up
 
 run_integration_server: login
 	docker-compose rm -f

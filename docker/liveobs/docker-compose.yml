@@ -1,4 +1,4 @@
-version: '2'
+version: "2"
 services:
   web:
     build:
@@ -15,7 +15,6 @@ services:
     depends_on:
       - db
     user: odoo
-    mem_limit: 600M
 
   db:
     image: postgres:9.3
