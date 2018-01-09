@@ -42,8 +42,7 @@ login: check_for_registry_settings
 # maintainer-quality-tools/gocd/Makefile` into this Makefile and make it a
 # dependency of this 'build' target.
 build: clean login
-	cd docker && docker build --pull --no-cache -t ${registry}/liveobs:${VERSION} -f Dockerfile-addons-baked-in .
-	cd ..
+	docker build --pull --no-cache -t ${registry}/liveobs:${VERSION} --build-arg VERSION=${VERSION} ./docker
 
 create_client_db: login
 # Build an image with the files necessary to build a demo database with invoke scripts, dump to SQL file, and push it to S3 for any test instances to use.

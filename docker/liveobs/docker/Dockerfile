@@ -1,6 +1,7 @@
-ARG version
 FROM 298801546701.dkr.ecr.eu-west-1.amazonaws.com/odoo
-ENV VERSION='1.11.1'
+
+ARG VERSION
+ENV VERSION=$VERSION
 
 USER root
 # Get /etc/odoo/server.cfg to use addons path with addons
