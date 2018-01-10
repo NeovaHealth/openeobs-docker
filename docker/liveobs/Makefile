@@ -45,9 +45,9 @@ build: clean login
 	docker build --pull --no-cache -t ${registry}/liveobs:${VERSION} --build-arg VERSION=${VERSION} ./docker
 
 create_client_db: login
+	docker-compose rm -f
 # Build an image with the files necessary to build a demo database with invoke scripts, dump to SQL file, and push it to S3 for any test instances to use.
 	@cd testing && docker build -t liveobs-testing:${VERSION} -f Dockerfile-testing --build-arg version=${VERSION} . && cd ..
-	docker-compose rm -f
 # Bring up the container and tell it to run the create DB script.
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-initdb.yml up --abort-on-container-exit
 	@docker rmi liveobs-testing:${VERSION}

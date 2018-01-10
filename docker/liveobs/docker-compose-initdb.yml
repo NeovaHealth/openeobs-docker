@@ -1,11 +1,7 @@
 version: '2'
 services:
   web:
+    image: liveobs-testing:${VERSION}
     environment:
       - VERSION=${VERSION}
-    build:
-      context: testing
-      dockerfile: Dockerfile-testing
-      args:
-        version: ${VERSION}
     entrypoint: /opt/odoo/createdb.sh
