@@ -50,6 +50,7 @@ create_client_db: login
 	@cd testing && docker build -t liveobs-testing:${VERSION} -f Dockerfile-testing --build-arg version=${VERSION} . && cd ..
 # Bring up the container and tell it to run the create DB script.
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-initdb.yml up --abort-on-container-exit
+	docker-compose rm -f
 	@docker rmi liveobs-testing:${VERSION}
 
 get_sql_dump:
