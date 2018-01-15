@@ -100,7 +100,7 @@ run_unit_tests: login
 	docker pull ${registry}/liveobs:${VERSION}
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml -f docker-compose-unit-test.yml build db
 	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml -f docker-compose-unit-test.yml up -d db
-	sleep 15
+	sleep 60
 	VERSION=${VERSION} docker-compose \
 		-f docker-compose.yml \
 		-f docker-compose-liveobs-server.yml \
@@ -124,7 +124,7 @@ run_unit_tests_coverage:
 		-f docker-compose.yml \
 		-f docker-compose-liveobs-server.yml \
 		-f docker-compose-unit-test-coverage.yml up -d db
-	sleep 15
+	sleep 60
 	VERSION=${VERSION} docker-compose \
 		-f docker-compose.yml \
 		-f docker-compose-liveobs-server.yml \
