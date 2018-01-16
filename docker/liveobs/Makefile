@@ -20,6 +20,8 @@ VERSION_INCLUDES_BUILD_NUMBER=$(shell echo $(VERSION) | egrep _[0-9]+$)
 # If there is a build number suffix create a version without it.
 LATEST_VERSION=$(shell echo $(VERSION) | sed -E 's/_[0-9]+//')
 
+registry=298801546701.dkr.ecr.eu-west-1.amazonaws.com
+
 all: build test publish create_client_db
 unit_test_on_gocd: stop_server clean get_sql_dump run_unit_tests
 
@@ -57,6 +59,7 @@ get_sql_dump:
 	mkdir -p db_dumps
 	aws s3 cp "s3://liveobs-provisioning-eu-west-1/artifacts/odoo/dbs/${VERSION}/liveobs.sql" db_dumps/liveobs.sql
 
+# Runs LiveObs and loads db_dumps/liveobs.sql into the database.
 run_server: login get_sql_dump
 	docker-compose rm -f
 	docker pull ${registry}/liveobs:${VERSION}
@@ -64,6 +67,21 @@ run_server: login get_sql_dump
 	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up -d db
 	sleep 15
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up -d --no-build web
+
+# Runs invoke scripts against a running LiveObs to rebuild the demo data.
+# There are various benefits over loading demo data from a database dump.
+# One is that observations will not be overdue because they are newly created.
+rebuild_demo_data:
+	docker run \
+	--volume=/c/Users/daniel.metcalfe/The\ Laboratory/LiveObs/liveobs-docker/docker/liveobs/docker/helper_scripts/db_init:/opt/nh/db_init/ \
+	--volume=/c/Users/daniel.metcalfe/The\ Laboratory/LiveObs/liveobs-docker/docker/liveobs/docker/server.cfg:/etc/odoo/server.cfg/ \
+	--link=liveobs_db_1 \
+	--net=liveobs_default \
+	--rm \
+	298801546701.dkr.ecr.eu-west-1.amazonaws.com/odoo:latest \
+	/opt/nh/venv/bin/inv --root /opt/nh/db_init/ \
+	demo.slam \
+	-c /etc/odoo/server.cfg -d nhclinical --server=http://liveobs_web_1:8069
 
 run_integration_server: login
 	docker-compose rm -f
@@ -156,12 +174,4 @@ publish_latest: check_for_registry_settings login
 	@docker tag ${registry}/liveobs:${VERSION} ${registry}/liveobs:latest
 	@docker push ${registry}/liveobs:latest
 
-reset_demo_data_with_invoke_scripts:
-# Container must be running before you run this script.
-	echo "Not yet implemented."
-
-reset_demo_data_with_sql_file:
-# Container must be running before you run this script.
-	echo "Not yet implemented."
-
-.PHONY: check_for_registry_settings clean login build test publish create_client_db run_unit_tests_coverage
+.PHONY: check_for_registry_settings clean login build test publish create_client_db run_unit_tests_coverage rebuild_demo_data
