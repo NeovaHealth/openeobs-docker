@@ -22,6 +22,8 @@ LATEST_VERSION=$(shell echo $(VERSION) | sed -E 's/_[0-9]+//')
 
 registry=298801546701.dkr.ecr.eu-west-1.amazonaws.com
 
+DB=db
+
 all: build test publish create_client_db
 unit_test_on_gocd: stop_server clean get_sql_dump run_unit_tests
 
@@ -71,6 +73,9 @@ run_server: login get_sql_dump
 # Runs invoke scripts against a running LiveObs to rebuild the demo data.
 # There are various benefits over loading demo data from a database dump.
 # One is that observations will not be overdue because they are newly created.
+#
+# THERE IS A KNOWN LIMITATION: This target fails when run a second time
+# against the same database. Restarting the server fixes this.
 rebuild_demo_data:
 	docker run \
 	--volume=/c/Users/daniel.metcalfe/The\ Laboratory/LiveObs/liveobs-docker/docker/liveobs/docker/helper_scripts/db_init:/opt/nh/db_init/ \
@@ -81,7 +86,7 @@ rebuild_demo_data:
 	298801546701.dkr.ecr.eu-west-1.amazonaws.com/odoo:latest \
 	/opt/nh/venv/bin/inv --root /opt/nh/db_init/ \
 	demo.slam \
-	-c /etc/odoo/server.cfg -d nhclinical --server=http://liveobs_web_1:8069
+	-c /etc/odoo/server.cfg -d ${DB} --server=http://liveobs_web_1:8069
 
 run_integration_server: login
 	docker-compose rm -f
