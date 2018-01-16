@@ -77,16 +77,10 @@ run_server: login get_sql_dump
 # THERE IS A KNOWN LIMITATION: This target fails when run a second time
 # against the same database. Restarting the server fixes this.
 rebuild_demo_data:
-	docker run \
-	--volume=/c/Users/daniel.metcalfe/The\ Laboratory/LiveObs/liveobs-docker/docker/liveobs/docker/helper_scripts/db_init:/opt/nh/db_init/ \
-	--volume=/c/Users/daniel.metcalfe/The\ Laboratory/LiveObs/liveobs-docker/docker/liveobs/docker/server.cfg:/etc/odoo/server.cfg/ \
-	--link=liveobs_db_1 \
-	--net=liveobs_default \
-	--rm \
-	298801546701.dkr.ecr.eu-west-1.amazonaws.com/odoo:latest \
-	/opt/nh/venv/bin/inv --root /opt/nh/db_init/ \
-	demo.slam \
-	-c /etc/odoo/server.cfg -d ${DB} --server=http://liveobs_web_1:8069
+# Used docker-compose because it supports relative paths for volume mounts.
+# Regular docker demands absolute paths.
+	DB=${DB} docker-compose -f rebuild_demo_data/docker-compose.yml \
+	run --rm invoke_script_runner
 
 run_integration_server: login
 	docker-compose rm -f
