@@ -108,7 +108,8 @@ run_server_with_ldap: login
 
 stop_server:
 # Stop containers specified in the `docker-compose.yml` file then remove them.
-	docker-compose rm --stop -f
+	docker-compose stop
+	docker-compose rm -f
 
 collect_unit_test_coverage:
 	virtualenv venv
