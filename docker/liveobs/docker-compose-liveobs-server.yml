@@ -3,8 +3,3 @@ services:
   web:
     image: 298801546701.dkr.ecr.eu-west-1.amazonaws.com/liveobs:${VERSION}
     command: 'openerp-server -d db --log-level=debug --log-sql'
-
-  db:
-    build:
-      context: db_dumps
-      dockerfile: Dockerfile-postgres-load-dump

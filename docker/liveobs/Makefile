@@ -65,8 +65,14 @@ run_server: login get_sql_dump
 	docker-compose rm -f
 	docker pull ${registry}/liveobs:${VERSION}
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml build db
-	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up -d db
+
+	docker-compose \
+	-f docker-compose.yml \
+	-f docker-compose-liveobs-server.yml \
+	-f docker-compose-postgres-load-db-dump.yml \
+	up -d db
 	sleep 15
+
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up -d --no-build web
 
 # Runs invoke scripts against a running LiveObs to rebuild the demo data.
@@ -75,9 +81,15 @@ run_server: login get_sql_dump
 #
 # THERE IS A KNOWN LIMITATION: This target fails when run a second time
 # against the same database. Restarting the server fixes this.
-rebuild_demo_data:
+run_server_and_rebuild_demo_data: stop_server
 # Used docker-compose because it supports relative paths for volume mounts.
 # Regular docker demands absolute paths.
+	docker-compose \
+	-f docker-compose.yml \
+	-f docker-compose-liveobs-server.yml \
+	up -d web
+	sleep 30
+
 	DB=${DB} docker-compose -f rebuild_demo_data/docker-compose.yml \
 	run --rm invoke_script_runner
 
