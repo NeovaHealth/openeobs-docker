@@ -7,8 +7,6 @@ else
 VENV_PIP_PATH = 'Scripts/pip'
 endif
 
-REGION = $(shell echo ${registry} | awk -F. '{print $$4}')
-
 # Skips the reading of the file if VERSION is already defined.
 # Allows running locally like `VERSION=foo make run_server`
 ifndef VERSION
@@ -20,9 +18,10 @@ VERSION_INCLUDES_BUILD_NUMBER=$(shell echo $(VERSION) | egrep _[0-9]+$)
 # If there is a build number suffix create a version without it.
 LATEST_VERSION=$(shell echo $(VERSION) | sed -E 's/_[0-9]+//')
 
-registry=298801546701.dkr.ecr.eu-west-1.amazonaws.com
-
 DB=db
+
+registry=298801546701.dkr.ecr.eu-west-1.amazonaws.com
+REGION = $(shell echo ${registry} | awk -F. '{print $$4}')
 
 all: build test publish create_client_db
 unit_test_on_gocd: stop_server clean get_sql_dump run_unit_tests
