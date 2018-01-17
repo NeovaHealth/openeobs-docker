@@ -80,7 +80,8 @@ run_server: login get_sql_dump
 # One is that observations will not be overdue because they are newly created.
 #
 # THERE IS A KNOWN LIMITATION: This target fails when run a second time
-# against the same database. Restarting the server fixes this.
+# against the same database. Restarting the server fixes this which is why
+# `stop_server` is run first.
 run_server_and_rebuild_demo_data: stop_server
 # Used docker-compose because it supports relative paths for volume mounts.
 # Regular docker demands absolute paths.
