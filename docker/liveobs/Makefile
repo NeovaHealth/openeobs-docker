@@ -20,7 +20,6 @@ LATEST_VERSION=$(shell echo $(VERSION) | sed -E 's/_[0-9]+//')
 
 DB=db
 
-registry=298801546701.dkr.ecr.eu-west-1.amazonaws.com
 REGION = $(shell echo ${registry} | awk -F. '{print $$4}')
 
 all: build test publish create_client_db
