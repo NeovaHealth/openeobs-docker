@@ -20,6 +20,10 @@ VERSION_INCLUDES_BUILD_NUMBER=$(shell echo $(VERSION) | egrep _[0-9]+$)
 # If there is a build number suffix create a version without it.
 LATEST_VERSION=$(shell echo $(VERSION) | sed -E 's/_[0-9]+//')
 
+DB=db
+
+REGION = $(shell echo ${registry} | awk -F. '{print $$4}')
+
 all: build test publish create_client_db
 unit_test_on_gocd: stop_server clean get_sql_dump run_unit_tests
 
@@ -47,7 +51,7 @@ build: clean login
 create_client_db: login
 	docker-compose rm -f
 # Build an image with the files necessary to build a demo database with invoke scripts, dump to SQL file, and push it to S3 for any test instances to use.
-	@cd testing && docker build -t liveobs-testing:${VERSION} -f Dockerfile-testing --build-arg version=${VERSION} . && cd ..
+	cd testing && docker build -t liveobs-testing:${VERSION} -f Dockerfile-testing --build-arg version=${VERSION} . && cd ..
 # Bring up the container and tell it to run the create DB script.
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-initdb.yml up --abort-on-container-exit
 	docker-compose rm -f
@@ -57,16 +61,39 @@ get_sql_dump:
 	mkdir -p db_dumps
 	aws s3 cp "s3://liveobs-provisioning-eu-west-1/artifacts/odoo/dbs/${VERSION}/liveobs.sql" db_dumps/liveobs.sql
 
+# Runs LiveObs and loads db_dumps/liveobs.sql into the database.
 run_server: login get_sql_dump
 	docker-compose rm -f
 	docker pull ${registry}/liveobs:${VERSION}
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml build db
-	docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up -d db
+
+	docker-compose \
+	-f docker-compose.yml \
+	-f docker-compose-liveobs-server.yml \
+	-f docker-compose-postgres-load-db-dump.yml \
+	up -d db
 	sleep 15
+
 	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up -d --no-build web
 
-run_server_for_development:
-	docker-compose -f docker-compose.yml -f docker-compose-development.yml up
+# Runs invoke scripts against a running LiveObs to rebuild the demo data.
+# There are various benefits over loading demo data from a database dump.
+# One is that observations will not be overdue because they are newly created.
+#
+# THERE IS A KNOWN LIMITATION: This target fails when run a second time
+# against the same database. Restarting the server fixes this which is why
+# `stop_server` is run first.
+run_server_and_rebuild_demo_data: stop_server
+# Used docker-compose because it supports relative paths for volume mounts.
+# Regular docker demands absolute paths.
+	docker-compose \
+	-f docker-compose.yml \
+	-f docker-compose-liveobs-server.yml \
+	up -d web
+	sleep 30
+
+	DB=${DB} docker-compose -f rebuild_demo_data/docker-compose.yml \
+	run --rm invoke_script_runner
 
 run_integration_server: login
 	docker-compose rm -f
@@ -160,12 +187,4 @@ publish_latest: check_for_registry_settings login
 	@docker tag ${registry}/liveobs:${VERSION} ${registry}/liveobs:latest
 	@docker push ${registry}/liveobs:latest
 
-reset_demo_data_with_invoke_scripts:
-# Container must be running before you run this script.
-	echo "Not yet implemented."
-
-reset_demo_data_with_sql_file:
-# Container must be running before you run this script.
-	echo "Not yet implemented."
-
-.PHONY: check_for_registry_settings clean login build test publish create_client_db run_unit_tests_coverage
+.PHONY: check_for_registry_settings clean login build test publish create_client_db run_unit_tests_coverage rebuild_demo_data
