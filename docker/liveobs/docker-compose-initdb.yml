@@ -1,11 +1,7 @@
 version: '2'
 services:
   web:
+    image: liveobs-testing:${VERSION}
     environment:
-      - GO_PIPELINE_COUNTER=${VERSION}
-    build:
-      context: testing
-      dockerfile: Dockerfile-testing
-      args:
-        version: ${VERSION}
+      - VERSION=${VERSION}
     entrypoint: /opt/odoo/createdb.sh

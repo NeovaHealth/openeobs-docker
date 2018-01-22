@@ -1,0 +1,6 @@
+version: '2'
+services:
+  db:
+    build:
+      context: db_dumps
+      dockerfile: Dockerfile-postgres-load-dump

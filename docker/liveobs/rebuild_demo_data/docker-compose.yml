@@ -1,0 +1,16 @@
+version: '3'
+services:
+  invoke_script_runner:
+    image: 298801546701.dkr.ecr.eu-west-1.amazonaws.com/odoo:latest
+    user: odoo
+    volumes:
+      - ../docker/helper_scripts/db_init:/opt/nh/db_init/
+      - ./server.cfg:/etc/odoo/server.cfg
+    entrypoint:
+      - /opt/nh/venv/bin/inv
+    command: --root /opt/nh/db_init/ demo.slam -c /etc/odoo/server.cfg -d ${DB} --server=http://liveobs_web_1:8069
+
+networks:
+  default:
+    external:
+      name: liveobs_default

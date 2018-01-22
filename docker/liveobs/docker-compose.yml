@@ -8,6 +8,7 @@ services:
     links:
       - db
     environment:
+      # These are picked up in `/entrypoint.sh` which starts the server.
       - USER=odoo
       - PASSWORD=odoo
       - HOST=db
