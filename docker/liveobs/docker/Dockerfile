@@ -1,5 +1,8 @@
 FROM 298801546701.dkr.ecr.eu-west-1.amazonaws.com/odoo
 
+ARG VERSION
+ENV VERSION=$VERSION
+
 USER root
 # Get /etc/odoo/server.cfg to use addons path with addons
 RUN chown -R odoo /opt/odoo
