@@ -16,6 +16,7 @@ inv demo.slam -d liveobs -c /etc/odoo/server.cfg
 inv test.test_enable_all_modules -d liveobs
 export PGUSER=${USER}
 export PGPASSWORD=${PASSWORD}
+echo "Version is ${VERSION}"
 pg_dump --clean --if-exists -h ${HOST} -d liveobs > /tmp/liveobs.sql
 echo -e "\nALTER DATABASE db OWNER to odoo;\n" >> /tmp/liveobs.sql
 s3cmd put /tmp/liveobs.sql "s3://liveobs-provisioning-eu-west-1/artifacts/odoo/dbs/${VERSION}/liveobs.sql"
