@@ -7,8 +7,6 @@ else
 VENV_PIP_PATH = 'Scripts/pip'
 endif
 
-REGION = $(shell echo ${registry} | awk -F. '{print $$4}')
-
 # Skips the reading of the file if VERSION is already defined.
 # Allows running locally like `VERSION=foo make run_server`
 ifndef VERSION
