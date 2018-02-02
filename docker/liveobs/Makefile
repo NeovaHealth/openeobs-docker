@@ -130,7 +130,7 @@ run_unit_tests: login
 		-f docker-compose.yml \
 		-f docker-compose-liveobs-server.yml \
 		-f docker-compose-unit-test.yml up web \
-		| tee unit_test.log
+		> >(tee unit_test.log) 2>&1
 
 create_unit_test_report:
 	python testing/create_reports.py
@@ -154,7 +154,7 @@ run_unit_tests_coverage:
 		-f docker-compose.yml \
 		-f docker-compose-liveobs-server.yml \
 		-f docker-compose-unit-test-coverage.yml up web \
-		| tee unit_test.log
+		> >(tee unit_test.log) 2>&1
 
 test:
 	@echo "FROM ${registry}/liveobs:${VERSION}\nCMD /bin/bash" > Dockerfile-rspec
