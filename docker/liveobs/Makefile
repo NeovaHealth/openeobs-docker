@@ -157,12 +157,13 @@ run_unit_tests_coverage:
 		| tee unit_test.log
 
 test:
-	@echo "FROM ${registry}/liveobs:${VERSION}\nCMD /bin/bash" > Dockerfile-rspec
-	@docker build -t liveobs-rspec:${VERSION} -f Dockerfile-rspec .
-	@bundle install
-	@VERSION=${VERSION} bundle exec rake spec
-	@rm -rf vendor
-	@docker rmi liveobs-rspec:${VERSION}
+	docker build -t liveobs-rspec:${VERSION} -f spec/Dockerfile-rspec \
+		--build-arg registry=${registry} \
+		--build-arg VERSION=${VERSION} .
+	bundle install
+	VERSION=${VERSION} bundle exec rake spec
+	rm -rf vendor
+	docker rmi liveobs-rspec:${VERSION}
 
 publish: check_for_registry_settings login
 # Versions like `awesome-feature_54` make it difficult for team members to

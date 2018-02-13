@@ -3,7 +3,6 @@
 **/*.swp
 **/vendor
 **/ubuntu-*-cloudimg-console.log
-**/Dockerfile-rspec
 **/liveobs_addons
 **/venv
 *.sql

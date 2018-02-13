@@ -1,0 +1,4 @@
+ARG registry
+ARG VERSION
+FROM $registry/liveobs:$VERSION
+CMD /bin/bash
