@@ -1,4 +1,4 @@
-FROM 298801546701.dkr.ecr.eu-west-1.amazonaws.com/odoo
+FROM 298801546701.dkr.ecr.eu-west-1.amazonaws.com/odoo:61a74ca99845
 
 ARG VERSION
 ENV VERSION=$VERSION
