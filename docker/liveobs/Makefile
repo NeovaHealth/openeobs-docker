@@ -44,7 +44,10 @@ login: check_for_registry_settings
 # maintainer-quality-tools/gocd/Makefile` into this Makefile and make it a
 # dependency of this 'build' target.
 build: clean login
-	docker build --pull --no-cache -t ${registry}/liveobs:${VERSION} --build-arg VERSION=${VERSION} ./docker
+	docker build --pull --no-cache \
+	-t ${registry}/liveobs:${VERSION} \
+	--build-arg VERSION=${VERSION} \
+	./docker
 
 create_client_db: login
 	docker-compose rm -f
