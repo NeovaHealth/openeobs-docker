@@ -13,5 +13,6 @@ RUN set -x; \
 USER odoo
 # Copy files into place
 COPY ./server.cfg /etc/odoo/server.cfg
+RUN chown odoo /etc/odoo/server.cfg
 COPY ./liveobs_addons /opt/odoo/liveobs_addons
 COPY ./helper_scripts/db_init /opt/odoo/db_init
