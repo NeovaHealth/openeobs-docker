@@ -1,6 +1,5 @@
 version: '2'
 services:
   db:
-    build:
-      context: db_dumps
-      dockerfile: Dockerfile-postgres-load-dump
+    volumes:
+      - ./db_dumps/liveobs.sql:/docker-entrypoint-initdb.d/liveobs.sql

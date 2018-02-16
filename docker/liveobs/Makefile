@@ -63,16 +63,20 @@ get_sql_dump:
 run_server: login get_sql_dump
 	docker-compose rm -f
 	docker pull ${registry}/liveobs:${VERSION}
-	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml build db
 
 	docker-compose \
 	-f docker-compose.yml \
 	-f docker-compose-liveobs-server.yml \
 	-f docker-compose-postgres-load-db-dump.yml \
 	up -d db
+# Give the database time to load the SQL file and restart itself.
 	sleep 15
 
-	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-liveobs-server.yml up -d --no-build web
+	VERSION=${VERSION} docker-compose \
+	-f docker-compose.yml \
+	-f docker-compose-liveobs-server.yml \
+	-f docker-compose-postgres-load-db-dump.yml \
+	up -d --no-build web
 
 # Runs invoke scripts against a running LiveObs to rebuild the demo data.
 # There are various benefits over loading demo data from a database dump.
