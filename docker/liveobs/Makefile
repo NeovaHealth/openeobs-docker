@@ -43,7 +43,7 @@ login: check_for_registry_settings
 # maintainer-quality tools, so bring 'move_addons_into_dir' target from `
 # maintainer-quality-tools/gocd/Makefile` into this Makefile and make it a
 # dependency of this 'build' target.
-build: clean login
+build: clean login create_server_config
 	docker build --pull --no-cache \
 	-t ${registry}/liveobs:${VERSION} \
 	--build-arg VERSION=${VERSION} \
@@ -69,6 +69,13 @@ create_client_db: login
 get_sql_dump:
 	mkdir -p db_dumps
 	aws s3 cp "s3://liveobs-provisioning-eu-west-1/artifacts/odoo/dbs/${VERSION}/liveobs.sql" db_dumps/liveobs.sql
+
+ifndef LOG_HANDLER
+LOG_HANDLER=:DEBUG
+# Can set this env var to `:DEBUG,openerp.sql_db:DEBUG` for SQL debugging.endif
+create_server_config:
+	cp ./docker/server_config_template.cfg ./docker/server.cfg
+	sed -i 's/__LOG_HANDLER__/${LOG_HANDLER}/g' ./docker/server.cfg
 
 # Runs LiveObs and loads db_dumps/liveobs.sql into the database.
 run_server: login get_sql_dump
@@ -197,4 +204,4 @@ publish_latest: check_for_registry_settings login
 	@docker tag ${registry}/liveobs:${VERSION} ${registry}/liveobs:latest
 	@docker push ${registry}/liveobs:latest
 
-.PHONY: check_for_registry_settings clean login build test publish create_client_db run_unit_tests_coverage rebuild_demo_data
+.PHONY: check_for_registry_settings clean login build test publish create_client_db run_unit_tests_coverage rebuild_demo_data create_server_config3
