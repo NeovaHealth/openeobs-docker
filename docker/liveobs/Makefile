@@ -205,4 +205,4 @@ publish_latest: check_for_registry_settings login
 	@docker tag ${registry}/liveobs:${VERSION} ${registry}/liveobs:latest
 	@docker push ${registry}/liveobs:latest
 
-.PHONY: check_for_registry_settings clean login build test publish create_client_db run_unit_tests_coverage rebuild_demo_data create_server_config3
+.PHONY: check_for_registry_settings clean login build test publish create_client_db run_unit_tests_coverage rebuild_demo_data create_server_config
