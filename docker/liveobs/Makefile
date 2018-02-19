@@ -72,7 +72,8 @@ get_sql_dump:
 
 ifndef LOG_HANDLER
 LOG_HANDLER=:DEBUG
-# Can set this env var to `:DEBUG,openerp.sql_db:DEBUG` for SQL debugging.endif
+# Can set this env var to `:DEBUG,openerp.sql_db:DEBUG` for SQL debugging.
+endif
 create_server_config:
 	cp ./docker/server_config_template.cfg ./docker/server.cfg
 	sed -i 's/__LOG_HANDLER__/${LOG_HANDLER}/g' ./docker/server.cfg
