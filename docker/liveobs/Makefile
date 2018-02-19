@@ -56,8 +56,13 @@ create_client_db: login
 	-f ./testing/Dockerfile-testing \
 	--build-arg version=${VERSION} \
 	./testing
+
 # Bring up the container and tell it to run the create DB script.
-	VERSION=${VERSION} docker-compose -f docker-compose.yml -f docker-compose-initdb.yml up --abort-on-container-exit
+	VERSION=${VERSION} docker-compose \
+	-f docker-compose.yml \
+	-f docker-compose-initdb.yml up \
+	--abort-on-container-exit
+
 	docker-compose rm -f
 	@docker rmi liveobs-testing:${VERSION}
 
