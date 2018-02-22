@@ -4,11 +4,9 @@ ARG VERSION
 ENV VERSION=$VERSION
 
 USER root
-# Get /etc/odoo/server.cfg to use addons path with addons
-RUN chown -R odoo /opt/odoo
 
-RUN set -x; \
-    sed -i 's/\/opt\/odoo\/addons/\/opt\/odoo\/addons,\/opt\/odoo\/liveobs_addons/g' /etc/odoo/server.cfg
+COPY ./server.cfg /etc/odoo/server.cfg
+RUN chown odoo /etc/odoo/server.cfg
 
 USER odoo
 # Copy files into place

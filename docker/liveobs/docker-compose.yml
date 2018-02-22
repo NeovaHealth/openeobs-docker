@@ -9,9 +9,10 @@ services:
       - db
     environment:
       # These are picked up in `/entrypoint.sh` which starts the server.
+      - HOST=db
+      - PORT=5432
       - USER=odoo
       - PASSWORD=odoo
-      - HOST=db
     depends_on:
       - db
     user: odoo

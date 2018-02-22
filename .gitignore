@@ -22,3 +22,5 @@ puppet/.librarian
 puppet/.out
 puppet/modules
 puppet/.rake_tasks~
+
+docker/liveobs/docker/server.cfg
