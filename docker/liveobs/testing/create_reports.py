@@ -17,7 +17,7 @@ def get_timestamp(date_string):
 
     :param date_string: Date in %Y-%m-%d %H:%M:%S,%f format from the log
     """
-    return float(datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S,%f').strftime('%s'))
+    return float(datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S,%f').strftime('%S'))
 
 with open('unit_test.log', 'rb') as log_file:
     for line in log_file:
