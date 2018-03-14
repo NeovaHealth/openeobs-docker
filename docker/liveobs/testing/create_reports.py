@@ -1,3 +1,8 @@
+"""
+Parses the `unit_test.log` created by the `run_unit_tests` rule in the
+Makefile to determine whether the unit tests passed or failed and return an
+appropriate exit code.
+"""
 import sys, subprocess, time, re, string
 from datetime import datetime
 from xunitgen import XunitDestination, EventReceiver, toxml
@@ -17,7 +22,8 @@ def get_timestamp(date_string):
 
     :param date_string: Date in %Y-%m-%d %H:%M:%S,%f format from the log
     """
-    return float(datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S,%f').strftime('%s'))
+    return float(datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S,%f').strftime('%S'))
+
 
 with open('unit_test.log', 'rb') as log_file:
     for line in log_file:
@@ -45,16 +51,20 @@ with open('unit_test.log', 'rb') as log_file:
             suite_name = "{}.py".format(package_name_els[-1])
             package_name = '/'.join(package_name_els[2:-1])
             test_name = test_name.replace('openerp.addons.', '')
-            destination.write_reports(test_name, suite_name, test_results, package_name=package_name)
+            destination.write_reports(
+                test_name, suite_name, test_results, package_name=package_name)
         if line[:6] == ': FAIL':
             line_match = TEST_FAIL_REGEX.match(line).groups()
             test_name = line_match[1].replace('openerp.addons.', '')
             receiver.failure('', line_match[1])
-        if 'FAIL:' in line:
+        if 'FAIL:' in line or 'ERROR:' in line:
             failing_tests.append(line)
         if 'Initiating shutdown' in line:
             if failing_tests:
-                sys.stdout.write('--------------------FAILING TESTS--------------------------\n')
+                sys.stdout.write(
+                    '--------------------FAILING TESTS------------------------'
+                    '--\n'
+                )
                 for test in failing_tests:
                     sys.stdout.write(' - {}\n'.format(test))
                 sys.exit(1)
