@@ -68,20 +68,29 @@ def test_enable_module(db, server='http://localhost:8069', user='admin', passwor
 @task
 def test_enable_all_modules(db, server='http://localhost:8069', user='admin', password='admin'):
     """
-    Enable testing for all Neova Health modules
+    Enable testing for all Neova Health / BJSS modules.
+
     :param db: Name of database
     :param server: Server address
     :param user: User to use when enabling / disabling testing
     :param password: Password for aforementioned user
     :return:True
     """
-    # Get the client
+    # Get the client.
     client = get_erppeek_client(server, db=db, user=user, password=password, verbose=True)
 
-    # Using the supplied module name get Neova Health modules and sort those to be enabled / disabled
-    modules_to_test = client.search('ir.module.module', [['name', 'ilike', 'nh_%'], ['name', '!=', 'test_inherit']])
+    # Using the supplied module name get modules and sort those to be
+    # enabled / disabled.
+    modules_to_test = client.search(
+        'ir.module.module',
+        [
+            ['author', '=', 'Neova Health'],
+            ['author', '=', 'BJSS'],
+            ['name', '!=', 'test_inherit']
+        ]
+    )
 
-    # Write to the database
+    # Write to the database.
     client.write('ir.module.module', modules_to_test, {'demo': True})
     return True
 
