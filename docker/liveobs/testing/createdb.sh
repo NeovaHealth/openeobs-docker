@@ -12,7 +12,7 @@ done
 echo -e "db_host = $HOST\ndb_user = $USER\ndb_password = $PASSWORD" >> /etc/odoo/server.cfg
 source /opt/nh/venv/bin/activate
 cd /opt/odoo/db_init
-inv demo.slam -d liveobs -c /etc/odoo/server.cfg
+inv demo.cwp -d liveobs -c /etc/odoo/server.cfg
 inv test.test_enable_all_modules -d liveobs
 export PGUSER=${USER}
 export PGPASSWORD=${PASSWORD}
