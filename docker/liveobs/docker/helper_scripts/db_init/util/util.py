@@ -84,6 +84,7 @@ def test_enable_all_modules(db, server='http://localhost:8069', user='admin', pa
     modules_to_test = client.search(
         'ir.module.module',
         [
+            '|',
             ['author', '=', 'Neova Health'],
             ['author', '=', 'BJSS'],
             ['name', '!=', 'test_inherit']
