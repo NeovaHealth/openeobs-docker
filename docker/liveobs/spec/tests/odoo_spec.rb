@@ -51,4 +51,8 @@ describe "LiveObs Docker image - Application" do
     it{ should be_directory }
   end
 
+  describe file('/opt/nh/venv/lib/python2.7/site-packages/werkzeug/wsgi.py') do
+    it{ should be_file }
+  end
+
 end

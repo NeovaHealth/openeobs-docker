@@ -8,6 +8,9 @@ USER root
 COPY ./server.cfg /etc/odoo/server.cfg
 RUN chown odoo /etc/odoo/server.cfg
 
+# Oodo/Liveobs verion of wsgi.py for vhost X-FORWARDED-HOST fix
+COPY ./wsgi.py /opt/nh/venv/lib/python2.7/site-packages/werkzeug/wsgi.py
+
 USER odoo
 # Copy files into place
 COPY ./liveobs_addons /opt/odoo/liveobs_addons
