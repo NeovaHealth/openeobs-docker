@@ -48,9 +48,12 @@ services:
 
   reverse-proxy:
     # The nginx config is overridden during build and so is baked into the image.
+    depends_on:
+      - app
     image: 298801546701.dkr.ecr.eu-west-1.amazonaws.com/nginx:${VERSION}
     ports:
-      - "8080:80"
+      - "8080:8080"
+      - "443:443"
     deploy:
       placement:
         constraints:
