@@ -17,23 +17,12 @@ demo_collection = Collection(
                                 demo.default,
                                 demo.demo,
                                 demo.upgrade,
-                                demo.btuh,
-                                demo.ldh,
-                                demo.lister,
-                                demo.lth,
-                                demo.ldh,
-                                demo.slam,
                                 demo.cwp,
                                 demo.dev,
                                 demo.internal,
                                 place_patients=data.place_patients,
                                 admit_patients=data.admit_patients,
                                 default_uat=data.uat_default_env,
-                                lister_uat=data.uat_lister_env,
-                                lth_uat=data.uat_lth_env,
-                                btuh_uat=data.uat_btuh_env,
-                                ldh_uat=data.uat_ldh_env,
-                                slam_uat=data.uat_slam_env,
                                 data=data.load_data,
                                 ews=data.ews,
                                 news_simulation=data.news_simulation,
@@ -42,11 +31,6 @@ demo_collection = Collection(
 
 live_collection = Collection(
                                 live.default,
-                                live.btuh,
-                                live.ldh,
-                                live.lister,
-                                live.lth,
-                                live.slam,
                                 live.cwp
                             )
 internal_collection = Collection(
